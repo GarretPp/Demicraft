@@ -1,0 +1,43 @@
+######################
+## Crafting Section ##
+######################
+
+customCrafting: false
+########################################################################
+## If custom crafting is true choose what custom crafting you want on ##
+########################################################################
+## Custom Weapons ##
+####################
+trident: true
+spatha: true
+pitchfork: true
+sunBow: true
+moonBow: true
+spear: true
+forgeHammer: true
+cadusus: true
+thyrsuss: true
+venustas: true
+prudentia: true
+panflute: true
+###################
+## Emerald Items ##
+###################
+emeraldHelmet: true
+emeraldChestplate: true
+emeraldLeggings: true
+emeraldBoots: true
+emeraldSword: true
+##########
+## Misc ##
+##########
+saddle: true
+
+
+
+#################
+## Join/Leave ##
+#################
+joinMessage: p% joined the game!
+leaveMessage: p% left the game!
+fireworkOnJoin: false

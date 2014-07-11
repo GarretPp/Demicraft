@@ -1,0 +1,47 @@
+name:  Demigodcraft
+author:  Garret_Pp
+version:  2.6.2
+description:  DemiCraft powers for demigods!
+main:  me.garret.Demigodcraft.Main
+commands:
+  hermes:
+    description:  Gives player the speed of Hermes!
+  mercury:
+    description:  Gives player the speed of Mercury!
+  ares:
+    description:  Gives player the strength of Ares!
+  mars:
+    description:  Gives player the strength of Mars!
+  zeus:
+    description:  Gives player the ability of flight!
+  jupiter:
+    description:  Gives player the ability of flight!
+  hephaestus:
+    description:  Gives player the resistance of Hephaestus!
+  vulcan:
+    description:  Gives player the resistance of Vulcan!
+  athena:
+    description:  Absorption for Athenas!
+  minerva:
+    description:  Absorption for Minervas!
+  hunt:
+    description:  Power of invisibility from prey!
+  dionysus:
+    description:  Gives player full hunger!
+  apollo:
+    description:  Gives player full health!
+  bacchus:
+    description:  Gives player full hunger!
+  phoebus:
+    description:  Gives player full health!
+  titan:
+    description:  Gives player the strength of a Titan!
+  divine:
+    description:  Gives player the strength of a Divine!
+  bless:
+    description:  Enchants help item with sharpness 1!
+  checkpoint:
+    description: Set a checkpoint!
+    aliases: cp
+  demihelp:
+    description: Open up the Demigod Craft help GUI!
