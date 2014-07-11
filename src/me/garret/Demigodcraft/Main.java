@@ -3,8 +3,6 @@ package me.garret.Demigodcraft;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.html.parser.Entity;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -19,17 +17,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Boat;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -1157,6 +1151,10 @@ public class Main extends JavaPlugin implements Listener{
 
 			}
 
+		} else {
+			if(p.hasPermission("demicraft.poseidon") || p.hasPermission("demicraft.neptune")) {
+				p.removePotionEffect(PotionEffectType.NIGHT_VISION);
+			}
 		}
 	}
 
@@ -1382,5 +1380,15 @@ public class Main extends JavaPlugin implements Listener{
 
 	public void looseEffect(Player p, Player t, Command cmd) {
 		p.sendMessage(ChatColor.GREEN + t.getDisplayName() + ChatColor.AQUA + " has lost the effect " + ChatColor.GREEN + cmd.getName() + ChatColor.AQUA + "!");
+	}
+	
+	public boolean isInWater(Player p) {
+		if(p.getLocation().getBlock().getType() == Material.WATER){
+			return true;
+		} else {
+			return false;
+		}
+		
+		
 	}
 }
