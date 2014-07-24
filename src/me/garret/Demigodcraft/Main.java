@@ -17,13 +17,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -1013,19 +1016,27 @@ public class Main extends JavaPlugin implements Listener{
 		}
 	}
 
-	/*@EventHandler public void onProjectileHit(ProjectileHitEvent e) {
+	@EventHandler public void onProjectileHit(ProjectileHitEvent e) {
 
+		ItemStack posc = new ItemStack(Material.DIAMOND_HOE, 1);
+		posc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+		ItemMeta metapos = posc.getItemMeta();
+		metapos.setDisplayName(ChatColor.AQUA + "Trident" + ChatColor.GRAY + "-" + ChatColor.RED + " Uncharged");
+		posc.setItemMeta(metapos);
+		
 		Projectile projectile = (Projectile) e.getEntity();
-		Entity possibleTarget = projectile.;
-		Player target = (Player) e.getEntity();
+		Player target = (Player) e.getEntity().getLastDamageCause().getEntity();
+		Player shooter = (Player) e.getEntity().getShooter();
 
-		if(possibleTarget == null || !(possibleTarget instanceof Player))
+		if(target == null || !(target instanceof Player))
 			return;
 
-		if (projectile instanceof Snowball) {
-			target.damage(2D);
-		}
-	}*/
+		if(shooter.getItemInHand().isSimilar(posc))
+			if (projectile instanceof Snowball) {
+				target.damage(3D);
+			}
+
+	}
 
 	@EventHandler
 	public void onConsume(PlayerItemConsumeEvent e) {
@@ -1381,14 +1392,14 @@ public class Main extends JavaPlugin implements Listener{
 	public void looseEffect(Player p, Player t, Command cmd) {
 		p.sendMessage(ChatColor.GREEN + t.getDisplayName() + ChatColor.AQUA + " has lost the effect " + ChatColor.GREEN + cmd.getName() + ChatColor.AQUA + "!");
 	}
-	
+
 	public boolean isInWater(Player p) {
 		if(p.getLocation().getBlock().getType() == Material.WATER){
 			return true;
 		} else {
 			return false;
 		}
-		
-		
+
+
 	}
 }
