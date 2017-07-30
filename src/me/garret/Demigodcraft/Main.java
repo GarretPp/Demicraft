@@ -2,6 +2,7 @@ package me.garret.Demigodcraft;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,15 +17,22 @@ import org.bukkit.FireworkEffect.Type;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Animals;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -58,6 +66,8 @@ public class Main extends JavaPlugin implements Listener{
 	public List<String> hunt = new ArrayList<String>();
 	public List<String> titan = new ArrayList<String>();
 	public List<String> divine = new ArrayList<String>(); 
+	public List<String> aphven = new ArrayList<String>(); 
+	public List<String> godGlow = new ArrayList<String>(); 
 
 	// custom crafting booleans // 
 	public boolean customCraft = false;
@@ -112,11 +122,13 @@ public class Main extends JavaPlugin implements Listener{
 		this.leaveMessage = this.getConfig().getString("leaveMessage");
 
 		if (customCraft) {
+			// weapon of Poseidon
 			if(trident) {
 				ItemStack trident = new ItemStack(Material.DIAMOND_HOE, 1);
-				trident.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+				trident.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
 				ItemMeta meta = trident.getItemMeta();
-				meta.setDisplayName(ChatColor.AQUA + "Trident" + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
+				meta.setUnbreakable(true);
+				meta.setDisplayName(ChatColor.AQUA + "Trident " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
 				trident.setItemMeta(meta);
 
 				ShapedRecipe trecipe = new ShapedRecipe(new ItemStack(trident));
@@ -125,11 +137,11 @@ public class Main extends JavaPlugin implements Listener{
 				trecipe.setIngredient('$', Material.STICK);
 				getServer().addRecipe(trecipe);
 			}
-
+			// weapon of zeus
 			if(spatha) {
 
 				ItemStack spatha = new ItemStack(Material.BLAZE_ROD, 1);
-				spatha.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+				spatha.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
 				ItemMeta meta2 = spatha.getItemMeta();
 				meta2.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
 				spatha.setItemMeta(meta2);
@@ -139,10 +151,10 @@ public class Main extends JavaPlugin implements Listener{
 				srecipe.setIngredient('+', Material.BLAZE_ROD);
 				getServer().addRecipe(srecipe);
 			}
-
+			//weapon of hades
 			if(pitchfork) {
 				ItemStack fork = new ItemStack(Material.DIAMOND_SPADE, 1);
-				fork.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+				fork.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
 				ItemMeta meta3 = fork.getItemMeta();
 				meta3.setDisplayName(ChatColor.RED + "Pitchfork");
 				fork.setItemMeta(meta3);
@@ -153,7 +165,7 @@ public class Main extends JavaPlugin implements Listener{
 				frecipe.setIngredient('+', Material.BLAZE_ROD);
 				getServer().addRecipe(frecipe);
 			}
-
+			//weapon of apollo
 			if(sunbow) {
 				ItemStack sunb = new ItemStack(Material.BOW, 1);
 				sunb.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 4);
@@ -168,7 +180,7 @@ public class Main extends JavaPlugin implements Listener{
 				sunrecipe.setIngredient('+', Material.BLAZE_ROD);
 				getServer().addRecipe(sunrecipe);
 			}
-
+			//weapon of atemis
 			if(moonbow) {
 				ItemStack moonb = new ItemStack(Material.BOW, 1);
 				moonb.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 4);
@@ -183,7 +195,7 @@ public class Main extends JavaPlugin implements Listener{
 				moonrecipe.setIngredient('+', Material.BLAZE_ROD);
 				getServer().addRecipe(moonrecipe);
 			}
-
+			//weapon of ares
 			if(spear) {
 				ItemStack spear = new ItemStack(Material.STICK, 1);
 				spear.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
@@ -197,7 +209,7 @@ public class Main extends JavaPlugin implements Listener{
 				sprecipe.setIngredient('$', Material.STICK);
 				getServer().addRecipe(sprecipe);
 			}
-
+			//weapon of hephaestus
 			if(forgeHammer) {
 				ItemStack fhammer = new ItemStack(Material.DIAMOND_AXE, 1);
 				fhammer.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
@@ -211,7 +223,7 @@ public class Main extends JavaPlugin implements Listener{
 				fhrecipe.setIngredient('+', Material.BLAZE_ROD);
 				getServer().addRecipe(fhrecipe);
 			}
-
+			//weapon of hermes
 			if(cadusus) {
 				ItemStack cadus = new ItemStack(Material.BLAZE_ROD, 1);
 				cadus.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
@@ -225,7 +237,7 @@ public class Main extends JavaPlugin implements Listener{
 				cadrecipe.setIngredient('+', Material.BLAZE_ROD);
 				getServer().addRecipe(cadrecipe);
 			}
-
+			//weapon of dionysus
 			if(thyrsus) {
 				ItemStack thyrsus = new ItemStack(Material.STICK, 1);
 				thyrsus.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
@@ -239,7 +251,7 @@ public class Main extends JavaPlugin implements Listener{
 				thyrecipe.setIngredient('+', Material.BLAZE_ROD);
 				getServer().addRecipe(thyrecipe);
 			}
-
+			//Weapon of Aphrodite
 			if(venustas) {
 				ItemStack Venustas = new ItemStack(Material.DIAMOND_SWORD, 1);
 				Venustas.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
@@ -253,8 +265,8 @@ public class Main extends JavaPlugin implements Listener{
 				venrecipe.setIngredient('+', Material.BLAZE_ROD);
 				getServer().addRecipe(venrecipe);
 			}
-
-			if(prudentia) {
+			//Weapon of Athena
+			if(prudentia) { 
 				ItemStack Prudentia = new ItemStack(Material.IRON_SWORD, 1);
 				Prudentia.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
 				Prudentia.addUnsafeEnchantment(Enchantment.DURABILITY, 4);
@@ -380,6 +392,7 @@ public class Main extends JavaPlugin implements Listener{
 
 						if(!hermer.contains(player.getName())) {
 
+							player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 8000000, 3));
 							player.sendMessage(ChatColor.GREEN + "You have the speed of Hermes/Mercury!");
 
 							hermer.add(player.getName());
@@ -401,6 +414,8 @@ public class Main extends JavaPlugin implements Listener{
 					if (player.hasPermission("demicraft.ares") || player.hasPermission("demicraft.mars")) {
 
 						if(!armar.contains(player.getName())) {
+							
+							player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 8000000, 1));
 
 							player.sendMessage(ChatColor.GREEN + "You have the strength of Ares!");
 
@@ -447,6 +462,7 @@ public class Main extends JavaPlugin implements Listener{
 					if (player.hasPermission("demicraft.hephaestus") || player.hasPermission("demicraft.vulcan")) {
 
 						if(!hephvul.contains(player.getName())) {
+							player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 8000000, 1));
 
 							player.sendMessage(ChatColor.GREEN + "You have the ressistance of Hephaestus/Vulcan!");
 
@@ -470,7 +486,7 @@ public class Main extends JavaPlugin implements Listener{
 						if(!athmen.contains(player.getName())) {
 
 							player.sendMessage(ChatColor.GREEN + "You have the endurance of Athena/Minerva!");
-							player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1200, 1));
+							player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 8000000, 1));
 							athmen.add(player.getName());
 
 						} else {
@@ -486,13 +502,59 @@ public class Main extends JavaPlugin implements Listener{
 						noPermission(player);
 					}
 				}
+				else if(cmd.getName().equalsIgnoreCase("aphrodite") || cmd.getName().equalsIgnoreCase("venus")) {
+					if (player.hasPermission("demicraft.aphrodite") || player.hasPermission("demicraft.venus")) {
+
+						if(!aphven.contains(player.getName())) {
+
+							player.sendMessage(ChatColor.GREEN + "You have the resistance of love from Aphrodite/Venus!");
+							player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 8000000, 1));
+							aphven.add(player.getName());
+
+						} else {
+
+							player.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+							player.sendMessage(ChatColor.GREEN + "You have lost the resistance of love fron Aphrodite/Venus!");
+
+							aphven.remove(player.getName());
+
+						}
+
+					} else {
+						noPermission(player);
+					}
+				}
+				else if(cmd.getName().equalsIgnoreCase("godGlow")) {
+					if (player.hasPermission("demicraft.godGlow")) {
+
+						if(!godGlow.contains(player.getName())) {
+
+							player.sendMessage(ChatColor.GREEN + "You now radiate power!");
+							player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 8000000, 1));
+							godGlow.add(player.getName());
+
+						} else {
+
+							player.removePotionEffect(PotionEffectType.GLOWING);
+							player.sendMessage(ChatColor.GREEN + "You have hidden your power!");
+
+							godGlow.remove(player.getName());
+
+						}
+
+					} else {
+						noPermission(player);
+					}
+				}
 				else if(cmd.getName().equalsIgnoreCase("hunt")) {
 					if (player.hasPermission("demicraft.hunt")) {
 
 						if(!hunt.contains(player.getName())) {
 
-							player.sendMessage(ChatColor.GREEN + "You temperarily an invisible hunter!");
+							player.sendMessage(ChatColor.GREEN + "You are temporarily an invisible hunter!");
 
+							player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 800000, 1));
+							
 							hunt.add(player.getName());
 
 						} else {
@@ -549,6 +611,12 @@ public class Main extends JavaPlugin implements Listener{
 
 						if(!titan.contains(player.getName())) {
 
+							player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 8000000, 1));
+							player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 8000000, 1));
+							player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 8000000, 1));
+							player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 8000000, 1));
+
+
 							player.sendMessage(ChatColor.GREEN  + "You have the power of a Titan!");
 							titan.add(player.getName());
 
@@ -572,6 +640,11 @@ public class Main extends JavaPlugin implements Listener{
 					if (player.hasPermission("demicraft.divine")) {
 
 						if(!divine.contains(player.getName())) {
+
+							player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 8000000, 2));
+							player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 8000000, 2));
+							player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 8000000, 2));
+							player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 8000000, 2));
 
 							player.sendMessage(ChatColor.GREEN  + "You have the power of a God!");
 							divine.add(player.getName());
@@ -602,34 +675,34 @@ public class Main extends JavaPlugin implements Listener{
 				}
 				else if(cmd.getName().equalsIgnoreCase("bless")) {
 					if(player.hasPermission("demicraft.bless")) {
-						if(player.getItemInHand().getType() == Material.DIAMOND_SWORD || player.getItemInHand().getType() == Material.IRON_SWORD || player.getItemInHand().getType() == Material.GOLD_SWORD || player.getItemInHand().getType() == Material.WOOD_SWORD || player.getItemInHand().getType() == Material.STONE_SWORD) {
-							player.getItemInHand().addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 2);
-							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getItemInHand().getType());
+						if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_SWORD || player.getInventory().getItemInMainHand().getType() == Material.IRON_SWORD || player.getInventory().getItemInMainHand().getType() == Material.GOLD_SWORD || player.getInventory().getItemInMainHand().getType() == Material.WOOD_SWORD || player.getInventory().getItemInMainHand().getType() == Material.STONE_SWORD) {
+							player.getInventory().getItemInMainHand().addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 2);
+							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getInventory().getItemInMainHand().getType());
 
 						}
-						else if(player.getItemInHand().getType() == Material.DIAMOND_HELMET|| player.getItemInHand().getType() == Material.IRON_HELMET|| player.getItemInHand().getType() == Material.GOLD_HELMET|| player.getItemInHand().getType() == Material.LEATHER_HELMET) {
-							player.getItemInHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getItemInHand().getType());
+						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_HELMET|| player.getInventory().getItemInMainHand().getType() == Material.IRON_HELMET|| player.getInventory().getItemInMainHand().getType() == Material.GOLD_HELMET|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_HELMET) {
+							player.getInventory().getItemInMainHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getInventory().getItemInMainHand().getType());
 
 						}
-						else if(player.getItemInHand().getType() == Material.DIAMOND_CHESTPLATE|| player.getItemInHand().getType() == Material.IRON_CHESTPLATE|| player.getItemInHand().getType() == Material.GOLD_CHESTPLATE|| player.getItemInHand().getType() == Material.LEATHER_CHESTPLATE) {
-							player.getItemInHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getItemInHand().getType());
+						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_CHESTPLATE|| player.getInventory().getItemInMainHand().getType() == Material.IRON_CHESTPLATE|| player.getInventory().getItemInMainHand().getType() == Material.GOLD_CHESTPLATE|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_CHESTPLATE) {
+							player.getInventory().getItemInMainHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getInventory().getItemInMainHand().getType());
 
 						}
-						else if(player.getItemInHand().getType() == Material.DIAMOND_LEGGINGS|| player.getItemInHand().getType() == Material.IRON_LEGGINGS|| player.getItemInHand().getType() == Material.GOLD_LEGGINGS|| player.getItemInHand().getType() == Material.LEATHER_LEGGINGS) {
-							player.getItemInHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getItemInHand().getType());
+						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_LEGGINGS|| player.getInventory().getItemInMainHand().getType() == Material.IRON_LEGGINGS|| player.getInventory().getItemInMainHand().getType() == Material.GOLD_LEGGINGS|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_LEGGINGS) {
+							player.getInventory().getItemInMainHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getInventory().getItemInMainHand().getType());
 
 						}
-						else if(player.getItemInHand().getType() == Material.DIAMOND_BOOTS|| player.getItemInHand().getType() == Material.IRON_BOOTS|| player.getItemInHand().getType() == Material.GOLD_BOOTS|| player.getItemInHand().getType() == Material.LEATHER_BOOTS) {
-							player.getItemInHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getItemInHand().getType());
+						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_BOOTS|| player.getInventory().getItemInMainHand().getType() == Material.IRON_BOOTS|| player.getInventory().getItemInMainHand().getType() == Material.GOLD_BOOTS|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_BOOTS) {
+							player.getInventory().getItemInMainHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getInventory().getItemInMainHand().getType());
 
 						}
-						else if(player.getItemInHand().getType() == Material.BOW) {
-							player.getItemInHand().addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
-							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getItemInHand().getType());
+						else if(player.getInventory().getItemInMainHand().getType() == Material.BOW) {
+							player.getInventory().getItemInMainHand().addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
+							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getInventory().getItemInMainHand().getType());
 
 						}
 						else {
@@ -652,253 +725,307 @@ public class Main extends JavaPlugin implements Listener{
 						noPermission(player);
 					}
 				}
-			} else if(args.length == 1) {
-
-				Player t = getServer().getPlayer(args[0]);
-				if(t.isOnline()){
-					if (cmd.getName().equalsIgnoreCase("hermes") || cmd.getName().equalsIgnoreCase("mercury")) {
-						if (player.hasPermission("demicraft.give.hermes") || player.hasPermission("demicraft.give.mercury")) {
-
-							if(!hermer.contains(t.getName())) {
-
-								t.sendMessage(ChatColor.GREEN + "You have the speed of Hermes/Mercury!");
-								getEffect(player, t, cmd);
-
-								hermer.add(t.getName());
-
-							} else {
-
-								t.removePotionEffect(PotionEffectType.SPEED);
-								t.sendMessage(ChatColor.GREEN + "You have lost the speed of Hermes/Mercury!");
-								looseEffect(player, t, cmd);
-
-								hermer.remove(t.getName());
-
-							}
-
-						} else {
-							noPermission(player);
-						}
-					}
-					else if(cmd.getName().equalsIgnoreCase("ares") || cmd.getName().equalsIgnoreCase("mars")) {
-						if (player.hasPermission("demicraft.give.ares") || player.hasPermission("demicraft.give.mars")) {
-
-							if(!armar.contains(t.getName())) {
-
-								t.sendMessage(ChatColor.GREEN + "You have the strength of Ares!");
-								getEffect(player, t, cmd);
-
-								armar.add(t.getName());
-
-							} else {
-
-								t.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
-								t.sendMessage(ChatColor.GREEN + "You have lost the strength of Ares/Mars!");
-								looseEffect(player, t, cmd);
-
-								armar.remove(t.getName());
-
-							}
-
-						} else {
-							noPermission(player);
-						}
-					}
-					else if(cmd.getName().equalsIgnoreCase("zeus") || cmd.getName().equalsIgnoreCase("jupiter")) {
-						if (player.hasPermission("demicraft.give.zeus") || player.hasPermission("demicraft.give.jupiter")) {
-
-							if(!zeju.contains(t.getName())) {
-								t.setAllowFlight(true);
-								t.setFlying(true);
-								t.sendMessage(ChatColor.GREEN  + "You have the power of flight");
-								getEffect(player, t, cmd);
-
-								zeju.add(t.getName());
-
-							} else {
-
-								t.setAllowFlight(false);
-								t.setFlying(false);
-								t.sendMessage(ChatColor.GREEN + "You have lost the power of flight");
-								looseEffect(player, t, cmd);
-
-								zeju.remove(t.getName());
-
-							}
-
-						} else {
-							noPermission(player);
-						}
-					}
-					else if(cmd.getName().equalsIgnoreCase("hephaestus") || cmd.getName().equalsIgnoreCase("vulcan")) {
-						if (player.hasPermission("demicraft.give.hephaestus") || player.hasPermission("demicraft.give.vulcan")) {
-
-							if(!hephvul.contains(t.getName())) {
-
-								t.sendMessage(ChatColor.GREEN + "You have the ressistance of Hephaestus/Vulcan!");
-								getEffect(player, t, cmd);
-
-								hephvul.add(t.getName());
-
-							} else {
-
-								t.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-								t.sendMessage(ChatColor.GREEN + "You have lost the ressistance of Hephaestus/Vulcan!");
-								looseEffect(player, t, cmd);
-
-								hephvul.remove(t.getName());
-							}
-
-						} else {
-							noPermission(player);
-						}
-					}
-					else if(cmd.getName().equalsIgnoreCase("athena") || cmd.getName().equalsIgnoreCase("minerva")) {
-						if (player.hasPermission("demicraft.give.athena") || player.hasPermission("demicraft.give.minerva")) {
-
-							if(!athmen.contains(t.getName())) {
-
-								t.sendMessage(ChatColor.GREEN + "You have the endurance of Athena/Minerva!");
-								getEffect(player, t, cmd);
-								t.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1200, 1));
-								athmen.add(t.getName());
-
-							} else {
-
-								t.removePotionEffect(PotionEffectType.ABSORPTION);
-								t.sendMessage(ChatColor.GREEN + "You have lost the endurance of Athena/Minerva!");
-								looseEffect(player, t, cmd);
-
-								athmen.remove(t.getName());
-
-							}
-
-						} else {
-							noPermission(player);
-						}
-					}
-					else if(cmd.getName().equalsIgnoreCase("hunt")) {
-						if (player.hasPermission("demicraft.give.hunt")) {
-
-							if(!hunt.contains(t.getName())) {
-
-								t.sendMessage(ChatColor.GREEN + "You temperarily an invisible hunter!");
-								getEffect(player, t, cmd);
-
-								hunt.add(t.getName());
-
-							} else {
-
-								t.removePotionEffect(PotionEffectType.INVISIBILITY);
-								t.sendMessage(ChatColor.GREEN + "You have lost the invisibility!");
-								looseEffect(player, t, cmd);
-
-								hunt.remove(t.getName());
-
-							}
-
-						} else {
-							noPermission(player);
-						}
-					}
-					else if(cmd.getName().equalsIgnoreCase("dionysus")) {
-						if(player.hasPermission("demicraft.give.dionysus")) {
-							t.setFoodLevel(20);
-							t.sendMessage(ChatColor.GREEN  + "You have been fed");
-							getEffect(player, t, cmd);
-						}
-						else {
-							noPermission(t);
-						}
-					}
-					else if(cmd.getName().equalsIgnoreCase("apollo")) {
-						if(player.hasPermission("demicraft.give.apollo")) {
-							t.setHealth(20.0);
-							t.sendMessage(ChatColor.GREEN  + "You have been healed");
-							getEffect(player, t, cmd);
-						}
-						else {
-							noPermission(player);
-						}
-					}
-					else if(cmd.getName().equalsIgnoreCase("bacchus")) {
-						if(player.hasPermission("demicraft.give.bacchus")) {
-							t.setFoodLevel(20);
-							t.sendMessage(ChatColor.GREEN  + "You have been fed");
-							getEffect(player, t, cmd);
-						}
-						else {
-							noPermission(player);
-						}
-					}
-					else if(cmd.getName().equalsIgnoreCase("phoebus")) {
-						if(player.hasPermission("demicraft.give.phoebus")) {
-							t.setHealth(20.0);
-							t.sendMessage(ChatColor.GREEN  + "You have been healed");
-							getEffect(player, t, cmd);
-						}
-						else {
-							noPermission(player);
-						}
-					}
-					else if(cmd.getName().equalsIgnoreCase("titan")) {
-						if (player.hasPermission("demicraft.give.titan")) {
-
-							if(!titan.contains(t.getName())) {
-
-								t.sendMessage(ChatColor.GREEN  + "You have the power of a Titan!");
-								getEffect(player, t, cmd);
-								titan.add(t.getName());
-
-							} else {
-
-								t.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
-								t.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-								t.removePotionEffect(PotionEffectType.SPEED);
-								t.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-
-								t.sendMessage(ChatColor.GREEN + "You have lost your power!");
-								looseEffect(player, t, cmd);
-								titan.remove(t.getName());
-
-							}
-
-						} else {
-							noPermission(player);
-						}
-					}
-					else if(cmd.getName().equalsIgnoreCase("divine")) {
-						if (player.hasPermission("demicraft.give.divine")) {
-
-							if(!divine.contains(t.getName())) {
-
-								t.sendMessage(ChatColor.GREEN  + "You have the power of a God!");
-								getEffect(player, t, cmd);
-								divine.add(t.getName());
-
-							} else {
-
-								t.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
-								t.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-								t.removePotionEffect(PotionEffectType.SPEED);
-								t.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-
-								t.sendMessage(ChatColor.GREEN + "You have lost your power!");
-								looseEffect(player, t, cmd);
-
-								divine.remove(t.getName());
-
-							}
-
-						} else {
-							noPermission(player);
-						}
-					}
-				} else {
-					player.sendMessage(ChatColor.RED + "Player is not online!");
-				}
-			}
+			} 
 		}
+		else if(args.length == 1) {
+				
+				Player t = player.getServer().getPlayer(args[0]);
+					
+					if ((t).isOnline() && sender instanceof Player) {
+						if (cmd.getName().equalsIgnoreCase("hermes") || cmd.getName().equalsIgnoreCase("mercury")) {
+							if (player.hasPermission("demicraft.give.hermes") || player.hasPermission("demicraft.give.mercury")) {
+	
+								if(!hermer.contains(t.getName())) {
+
+									t.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 8000000, 3));
+									t.sendMessage(ChatColor.GREEN + "You have the speed of Hermes/Mercury!");
+									getEffect(player, t, cmd);
+	
+									hermer.add(t.getName());
+	
+								} else {
+	
+									t.removePotionEffect(PotionEffectType.SPEED);
+									t.sendMessage(ChatColor.GREEN + "You have lost the speed of Hermes/Mercury!");
+									looseEffect(player, t, cmd);
+	
+									hermer.remove(t.getName());
+	
+								}
+	
+							} else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("ares") || cmd.getName().equalsIgnoreCase("mars")) {
+							if (player.hasPermission("demicraft.give.ares") || player.hasPermission("demicraft.give.mars")) {
+	
+								if(!armar.contains(t.getName())) {
+
+									t.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 8000000, 1));
+									t.sendMessage(ChatColor.GREEN + "You have the strength of Ares!");
+									getEffect(player, t, cmd);
+	
+									armar.add(t.getName());
+	
+								} else {
+	
+									t.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+									t.sendMessage(ChatColor.GREEN + "You have lost the strength of Ares/Mars!");
+									looseEffect(player, t, cmd);
+	
+									armar.remove(t.getName());
+	
+								}
+	
+							} else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("zeus") || cmd.getName().equalsIgnoreCase("jupiter")) {
+							if (player.hasPermission("demicraft.give.zeus") || player.hasPermission("demicraft.give.jupiter")) {
+	
+								if(!zeju.contains(t.getName())) {
+									t.setAllowFlight(true);
+									t.setFlying(true);
+									t.sendMessage(ChatColor.GREEN  + "You have the power of flight");
+									getEffect(player, t, cmd);
+	
+									zeju.add(t.getName());
+	
+								} else {
+	
+									t.setAllowFlight(false);
+									t.setFlying(false);
+									t.sendMessage(ChatColor.GREEN + "You have lost the power of flight");
+									looseEffect(player, t, cmd);
+	
+									zeju.remove(t.getName());
+	
+								}
+	
+							} else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("hephaestus") || cmd.getName().equalsIgnoreCase("vulcan")) {
+							if (player.hasPermission("demicraft.give.hephaestus") || player.hasPermission("demicraft.give.vulcan")) {
+	
+								if(!hephvul.contains(t.getName())) {
+
+									t.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 8000000, 3));
+									t.sendMessage(ChatColor.GREEN + "You have the ressistance of Hephaestus/Vulcan!");
+									getEffect(player, t, cmd);
+									t.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 800000, 1));
+	
+									hephvul.add(t.getName());
+	
+								} else {
+	
+									t.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+									t.sendMessage(ChatColor.GREEN + "You have lost the ressistance of Hephaestus/Vulcan!");
+									looseEffect(player, t, cmd);
+	
+									hephvul.remove(t.getName());
+								}
+	
+							} else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("athena") || cmd.getName().equalsIgnoreCase("minerva")) {
+							if (player.hasPermission("demicraft.give.athena") || player.hasPermission("demicraft.give.minerva")) {
+	
+								if(!athmen.contains(t.getName())) {
+
+									t.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 8000000, 1));
+									t.sendMessage(ChatColor.GREEN + "You have the endurance of Athena/Minerva!");
+									getEffect(player, t, cmd);
+									t.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 800000, 1));
+									athmen.add(t.getName());
+	
+								} else {
+	
+									t.removePotionEffect(PotionEffectType.ABSORPTION);
+									t.sendMessage(ChatColor.GREEN + "You have lost the endurance of Athena/Minerva!");
+									looseEffect(player, t, cmd);
+	
+									athmen.remove(t.getName());
+	
+								}
+	
+							} else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("aphrodite") || cmd.getName().equalsIgnoreCase("venus")) {
+							if (player.hasPermission("demicraft.give.aphrodite") || player.hasPermission("demicraft.give.venus")) {
+	
+								if(!aphven.contains(t.getName())) {
+	
+									t.sendMessage(ChatColor.GREEN + "You have the resistance of love from Aphrodite/Venus!");
+									getEffect(player, t, cmd);
+									t.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 800000, 1));
+									aphven.add(t.getName());
+	
+								} else {
+	
+									t.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+									t.sendMessage(ChatColor.GREEN + "You have lost the resistance of love from Aphrodite/Venus!");
+									looseEffect(player, t, cmd);
+	
+									aphven.remove(t.getName());
+	
+								}
+	
+							} else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("godGlow")) {
+							if (player.hasPermission("demicraft.give.godGlow")) {
+								if(!godGlow.contains(t.getName())) {
+	
+									t.sendMessage(ChatColor.GREEN + "You now radiate power!");
+									getEffect(player, t, cmd);
+									t.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 800000, 1));
+									godGlow.add(t.getName());
+	
+								} else {
+	
+									t.removePotionEffect(PotionEffectType.GLOWING);
+									t.sendMessage(ChatColor.GREEN + "You have hidden your power!");
+									looseEffect(player, t, cmd);
+	
+									godGlow.remove(t.getName());
+	
+								}
+	
+							} else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("hunt")) {
+							if (player.hasPermission("demicraft.give.hunt")) {
+	
+								if(!hunt.contains(t.getName())) {
+	
+									t.sendMessage(ChatColor.GREEN + "You temperarily an invisible hunter!");
+									getEffect(player, t, cmd);
+									t.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 800000, 1));
+	
+									hunt.add(t.getName());
+	
+								} else {
+	
+									t.removePotionEffect(PotionEffectType.INVISIBILITY);
+									t.sendMessage(ChatColor.GREEN + "You have lost the invisibility!");
+									looseEffect(player, t, cmd);
+	
+									hunt.remove(t.getName());
+	
+								}
+	
+							} else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("dionysus")) {
+							if(player.hasPermission("demicraft.give.dionysus")) {
+								t.setFoodLevel(20);
+								t.sendMessage(ChatColor.GREEN  + "You have been fed");
+								getEffect(player, t, cmd);
+							}
+							else {
+								noPermission(t);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("apollo")) {
+							if(player.hasPermission("demicraft.give.apollo")) {
+								t.setHealth(20.0);
+								t.sendMessage(ChatColor.GREEN  + "You have been healed");
+								getEffect(player, t, cmd);
+							}
+							else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("bacchus")) {
+							if(player.hasPermission("demicraft.give.bacchus")) {
+								t.setFoodLevel(20);
+								t.sendMessage(ChatColor.GREEN  + "You have been fed");
+								getEffect(player, t, cmd);
+							}
+							else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("phoebus")) {
+							if(player.hasPermission("demicraft.give.phoebus")) {
+								t.setHealth(20.0);
+								t.sendMessage(ChatColor.GREEN  + "You have been healed");
+								getEffect(player, t, cmd);
+							}
+							else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("titan")) {
+							if (player.hasPermission("demicraft.give.titan")) {
+	
+								if(!titan.contains(t.getName())) {
+	
+									t.sendMessage(ChatColor.GREEN  + "You have the power of a Titan!");
+									getEffect(player, t, cmd);
+									titan.add(t.getName());
+	
+								} else {
+	
+									t.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+									t.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+									t.removePotionEffect(PotionEffectType.SPEED);
+									t.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+	
+									t.sendMessage(ChatColor.GREEN + "You have lost your power!");
+									looseEffect(player, t, cmd);
+									titan.remove(t.getName());
+	
+								}
+	
+							} else {
+								noPermission(player);
+							}
+						}
+						else if(cmd.getName().equalsIgnoreCase("divine")) {
+							if (player.hasPermission("demicraft.give.divine")) {
+	
+								if(!divine.contains(t.getName())) {
+	
+									t.sendMessage(ChatColor.GREEN  + "You have the power of a God!");
+									getEffect(player, t, cmd);
+									divine.add(t.getName());
+	
+								} else {
+									t.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+									t.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+									t.removePotionEffect(PotionEffectType.SPEED);
+									t.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+	
+									t.sendMessage(ChatColor.GREEN + "You have lost your power!");
+									looseEffect(player, t, cmd);
+	
+									divine.remove(t.getName());
+	
+								}
+	
+							} else {
+								noPermission(player);
+							}
+						}
+					} else {
+						player.sendMessage(ChatColor.RED + "Player " + t.getName() + " is not online!");
+					}
+			}
 		return false;
 
 	}
@@ -911,8 +1038,8 @@ public class Main extends JavaPlugin implements Listener{
 
 		if(p.hasPermission("demicraft.posnep.boat")) {
 
-			b.setMaxSpeed(0.9D);
-			p.getWorld().playSound(p.getLocation(), Sound.ITEM_BREAK, 1, 1);
+			b.setMaxSpeed(0.9D);;
+			p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
 		} else {
 
 			e.setCancelled(true);
@@ -933,13 +1060,13 @@ public class Main extends JavaPlugin implements Listener{
 
 		//zeus
 		ItemStack zeusc = new ItemStack(Material.BLAZE_ROD, 1);
-		zeusc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+		zeusc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
 		ItemMeta meta = zeusc.getItemMeta();
 		meta.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
 		zeusc.setItemMeta(meta);
 
 		ItemStack zeusuc = new ItemStack(Material.BLAZE_ROD, 1);
-		zeusuc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+		zeusuc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
 		ItemMeta meta1 = zeusuc.getItemMeta();
 		meta1.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.RED + " Uncharged");
 		zeusuc.setItemMeta(meta1);
@@ -947,15 +1074,17 @@ public class Main extends JavaPlugin implements Listener{
 
 		//poseidon
 		ItemStack posc = new ItemStack(Material.DIAMOND_HOE, 1);
-		posc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+		posc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
 		ItemMeta metapos = posc.getItemMeta();
-		metapos.setDisplayName(ChatColor.AQUA + "Trident" + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
+		metapos.setUnbreakable(true);
+		metapos.setDisplayName(ChatColor.AQUA + "Trident " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
 		posc.setItemMeta(metapos);
 
 		ItemStack posuc = new ItemStack(Material.DIAMOND_HOE, 1);
-		posuc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+		posuc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
 		ItemMeta metapos1 = posuc.getItemMeta();
-		metapos1.setDisplayName(ChatColor.AQUA + "Trident" + ChatColor.GRAY + "-" + ChatColor.RED + " Uncharged");
+		metapos1.setUnbreakable(true);
+		metapos1.setDisplayName(ChatColor.AQUA + "Trident " + ChatColor.GRAY + "-" + ChatColor.RED + " Uncharged");
 		posuc.setItemMeta(metapos1);
 
 
@@ -963,13 +1092,13 @@ public class Main extends JavaPlugin implements Listener{
 		if(!(e.getItem().getType() == Material.BLAZE_ROD) && !(e.getItem().getType() == Material.DIAMOND_HOE)) return; 
 
 		if(!cooldownz.contains(p)) {
-			if(p.getItemInHand().isSimilar(zeusc)) {
+			if(p.getInventory().getItemInMainHand().isSimilar(zeusc)) {
 
 				if(p.hasPermission("demicraft.zeus.smite") || p.hasPermission("demicraft.jupiter.smite")) {
 
-					p.getItemInHand().setItemMeta(meta1);
+					p.getInventory().getItemInMainHand().setItemMeta(meta1);
 					p.getWorld().playEffect(e.getPlayer().getLocation(), Effect.SMOKE, 10);
-					e.getPlayer().getWorld().strikeLightning((e.getPlayer().getTargetBlock(null, 100).getLocation()));
+					e.getPlayer().getWorld().strikeLightning(e.getPlayer().getTargetBlock((Set<Material>) null, 150).getLocation());
 					cooldownz.add(p);
 					// Cooldown
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
@@ -981,23 +1110,25 @@ public class Main extends JavaPlugin implements Listener{
 
 
 				} 
-			} else if(p.getItemInHand().isSimilar(zeusuc)) {
+			} else if(p.getInventory().getItemInMainHand().isSimilar(zeusuc)) {
 
 				if(p.hasPermission("demicraft.zeus.smite") || p.hasPermission("demicraft.jupiter.smite")) {
-					p.getItemInHand().setItemMeta(meta);
+					p.getInventory().getItemInMainHand().setItemMeta(meta);
 				} 
 			}
 		}
 		if(!cooldownp.contains(p)) {
-			if(p.getItemInHand().isSimilar(posc)) {
+			if(p.getInventory().getItemInMainHand().isSimilar(posc)) {
 
 				if(p.hasPermission("demicraft.poseidon.shoot") || p.hasPermission("demicraft.neptune.shoot")) {
 
-					p.getItemInHand().setItemMeta(metapos1);
-					p.getWorld().playEffect(e.getPlayer().getLocation(), Effect.SMOKE, 10);
-					Snowball s = e.getPlayer().launchProjectile(Snowball.class);		
+					p.getInventory().getItemInMainHand().setItemMeta(metapos1);
+	                
+					Snowball snowball = p.getWorld().spawn(p.getEyeLocation(), Snowball.class);
+					snowball.setShooter(p);
+					snowball.setVelocity(p.getLocation().getDirection().multiply(2.0));
 					cooldownp.add(p);
-					// Cooldown
+					// Cool down
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
 						public void run(){
 							cooldownp.remove(p);
@@ -1007,61 +1138,59 @@ public class Main extends JavaPlugin implements Listener{
 
 
 				} 
-			} else if(p.getItemInHand().isSimilar(posuc)) {
+			} else if(p.getInventory().getItemInMainHand().isSimilar(posuc)) {
 
 				if(p.hasPermission("demicraft.poseidon.shoot") || p.hasPermission("demicraft.neptune.shoot")) {
-					p.getItemInHand().setItemMeta(metapos);
+					p.getInventory().getItemInMainHand().setItemMeta(metapos);
 				} 
 			}
 		}
 	}
 
-	@EventHandler public void onProjectileHit(ProjectileHitEvent e) {
-
-		ItemStack posc = new ItemStack(Material.DIAMOND_HOE, 1);
-		posc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
-		ItemMeta metapos = posc.getItemMeta();
-		metapos.setDisplayName(ChatColor.AQUA + "Trident" + ChatColor.GRAY + "-" + ChatColor.RED + " Uncharged");
-		posc.setItemMeta(metapos);
+	@EventHandler public void onProjectileHit(ProjectileHitEvent e) 
+	{
 		
 		Projectile projectile = (Projectile) e.getEntity();
-		Player target = (Player) e.getEntity().getLastDamageCause().getEntity();
-		Player shooter = (Player) e.getEntity().getShooter();
-
-		if(target == null || !(target instanceof Player))
+		Entity possibleTarget = projectile.getNearbyEntities(1, 1, 1).get(0);
+		
+		if(possibleTarget == null)
 			return;
 
-		if(shooter.getItemInHand().isSimilar(posc))
-			if (projectile instanceof Snowball) {
-				target.damage(3D);
+		if (projectile instanceof Snowball) 
+		{
+			if (possibleTarget instanceof Player) 
+			{ 
+				if (e.getEntity().getShooter() instanceof Player) {
+					Player shooter = (Player) e.getEntity().getShooter();
+					if (shooter.hasPermission("demicraft.poseidon.shoot") || shooter.hasPermission("demicraft.neptune.shoot"))
+					{
+						Player target = (Player) possibleTarget;
+						target.damage(3);
+					}
+				}
 			}
+		}
 
 	}
 
 	@EventHandler
-	public void onConsume(PlayerItemConsumeEvent e) {
+	public void onConsume(PlayerItemConsumeEvent e) 
+	{
 		Player p = (Player) e.getPlayer();
 
-		if(e.getItem().getType() == Material.ROTTEN_FLESH) {
-			if(p.hasPermission("demicraft.hades") || p.hasPermission("demicraft.pluto")) {
+		if(e.getItem().getType() == Material.ROTTEN_FLESH) 
+		{
+			if(p.hasPermission("demicraft.hades.rottenflesh") || p.hasPermission("demicraft.pluto.rottenflesh")) 
+			{
 
-				e.setCancelled(true);
 				p.removePotionEffect(PotionEffectType.HUNGER);
-				p.setSaturation(p.getSaturation() + 2);
+				p.setSaturation(2);
 				p.setFoodLevel(p.getFoodLevel() + 2);
-				if(p.getItemInHand().getAmount() == 1) {
-					e.getItem().setAmount(0);
-				} else {
-					p.getItemInHand().setAmount(p.getItemInHand().getAmount() - 1);
-				}
-
-			} else {
-
-				p.playSound(p.getLocation(), Sound.BAT_DEATH, 1, 1);
+				p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
+				p.updateInventory();
+				e.setCancelled(true);
 
 			}
-		} else {
-
 		}
 	}
 
@@ -1069,96 +1198,12 @@ public class Main extends JavaPlugin implements Listener{
 	public void onPlayerMove(final PlayerMoveEvent event) {
 
 		final Player p = (Player) event.getPlayer();
-
-		if(hermer.toString().contains(p.getName())) {
-			if(!p.getActivePotionEffects().contains(PotionEffectType.SPEED)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 8000000, 2));
-
-			} else {}
-		}
-
-		if(armar.toString().contains(p.getName())) {
-			if(!p.getActivePotionEffects().contains(PotionEffectType.INCREASE_DAMAGE)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 8000000, 2));
-
-			} else {}
-		}
-
-		if(hephvul.toString().contains(p.getName())) {
-			if(!p.getActivePotionEffects().contains(PotionEffectType.FIRE_RESISTANCE)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 8000000, 2));
-
-			} else {}
-		}
-
-		if(hunt.toString().contains(p.getName())) {
-			if(!p.getActivePotionEffects().contains(PotionEffectType.INVISIBILITY)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 8000000, 1));
-
-			} else {}
-		}
-
-		if(titan.toString().contains(p.getName())) {
-
-			if(!p.getActivePotionEffects().contains(PotionEffectType.FIRE_RESISTANCE)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 8000000, 2));
-
-			} 
-			if(!p.getActivePotionEffects().contains(PotionEffectType.INCREASE_DAMAGE)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 8000000, 2));
-
-			}
-			if(!p.getActivePotionEffects().contains(PotionEffectType.SPEED)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 8000000, 3));
-
-			}
-			if(!p.getActivePotionEffects().contains(PotionEffectType.DAMAGE_RESISTANCE)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 8000000, 2));
-
-			}
-
-		} else {}
-
-		if(divine.toString().contains(p.getName())) {
-
-			if(!p.getActivePotionEffects().contains(PotionEffectType.FIRE_RESISTANCE)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 8000000, 2));
-
-			} 
-			if(!p.getActivePotionEffects().contains(PotionEffectType.INCREASE_DAMAGE)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 8000000, 3));
-
-			}
-			if(!p.getActivePotionEffects().contains(PotionEffectType.SPEED)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 8000000, 4));
-
-			}
-			if(!p.getActivePotionEffects().contains(PotionEffectType.DAMAGE_RESISTANCE)) {
-
-				p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 8000000, 3));
-
-			}
-
-		}
-
-
 		if (event.getTo().getBlock().isLiquid()) {
 			if(p.hasPermission("demicraft.poseidon") || p.hasPermission("demicraft.neptune")) {
 
 				int mair = p.getMaximumAir();
 				p.setRemainingAir(mair);
-				p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 500, 1));
+				p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 8000000, 1), true);
 
 			}
 
@@ -1169,7 +1214,21 @@ public class Main extends JavaPlugin implements Listener{
 		}
 	}
 
-
+	 @EventHandler(priority = EventPriority.HIGHEST)
+	 public void NoTarget(EntityTargetEvent event) {
+	        if (event.getEntityType().equals(EntityType.BLAZE)
+	                        || (event.getEntityType().equals(EntityType.ENDERMAN)
+	                        || (event.getEntityType().equals(EntityType.GHAST)
+	                        || (event.getEntityType().equals(EntityType.MAGMA_CUBE)
+	                        || (event.getEntityType().equals(EntityType.PIG_ZOMBIE)
+	                        || (event.getEntityType().equals(EntityType.SKELETON)
+	                        || (event.getEntityType().equals(EntityType.ZOMBIE)))))))) {
+	        if (event.getTarget() instanceof Player) {
+	            	if (event.getTarget().hasPermission("demicraft.hades.notarget") || event.getTarget().hasPermission("demicraft.pluto.notarget"))
+	                    event.setCancelled(true);
+	            }
+	        }
+	 }
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e){
@@ -1347,6 +1406,7 @@ public class Main extends JavaPlugin implements Listener{
 				case BLAZE_ROD:
 					e.setCancelled(true);
 					p.sendMessage(String.format("%sYou have chosen %sZeus%s!", ChatColor.AQUA, ChatColor.RED, ChatColor.AQUA));
+					p.closeInventory();
 					break;
 				default:
 					e.setCancelled(true);
@@ -1359,6 +1419,7 @@ public class Main extends JavaPlugin implements Listener{
 				case BLAZE_ROD:
 					e.setCancelled(true);
 					p.sendMessage(String.format("%sYou have chosen %sJupiter%s!", ChatColor.AQUA, ChatColor.RED, ChatColor.AQUA));
+					p.closeInventory();					
 					break;
 				default:
 					e.setCancelled(true);
@@ -1378,11 +1439,11 @@ public class Main extends JavaPlugin implements Listener{
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		Player p = (Player) e.getEntity();
-		e.setDeathMessage(ChatColor.GOLD + "Player " + ChatColor.GOLD + p.getDisplayName() + ChatColor.GOLD + " was killed by " + ChatColor.GOLD + p.getKiller().getDisplayName() + ChatColor.GOLD + " using " + ChatColor.GOLD + p.getKiller().getItemInHand().getType().toString().toLowerCase() + ChatColor.GOLD + "!");
+		e.setDeathMessage(ChatColor.GOLD + "Player " + ChatColor.GOLD + p.getDisplayName() + ChatColor.GOLD + " was killed by " + ChatColor.GOLD + p.getKiller().getDisplayName() + ChatColor.GOLD + " using " + ChatColor.GOLD + p.getKiller().getInventory().getItemInMainHand().getType().toString().toLowerCase() + ChatColor.GOLD + "!");
 	}
-
+    
 	public void noPermission(Player player){
-		player.sendMessage(ChatColor.RED + "Error: No Permission");
+		player.sendMessage(ChatColor.RED + "The gods have not granted you permission to preform this command.");
 	}
 
 	public void getEffect(Player p, Player t, Command cmd) {

@@ -1,6 +1,6 @@
 name:  Demigodcraft
 author:  Garret_Pp
-version:  2.6.2
+version:  2.8.2
 description:  DemiCraft powers for demigods!
 main:  me.garret.Demigodcraft.Main
 commands:
@@ -38,6 +38,12 @@ commands:
     description:  Gives player the strength of a Titan!
   divine:
     description:  Gives player the strength of a Divine!
+  aphrodite:
+    description:  Gives player the resistance of love.
+  venus:
+    description:  Gives player the resistance of love.
+  godglow:
+    description:  Allows Gods to glow.
   bless:
     description:  Enchants help item with sharpness 1!
   checkpoint:
