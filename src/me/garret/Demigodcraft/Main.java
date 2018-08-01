@@ -18,19 +18,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Boat;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -71,12 +67,7 @@ public class Main extends JavaPlugin implements Listener{
 	public List<String> godGlow = new ArrayList<String>(); 
 
 	// custom crafting booleans // 
-	public boolean customCraft = false;
-	public boolean trident = true;
-	public boolean spatha = true;
-	public boolean pitchfork = true;
-	public boolean sunbow = true;
-	public boolean moonbow = true;
+	public boolean customCraft = true;
 	public boolean fireworkOnJoin = true;
 	public String joinMessage = "%p% joined the game!";
 	public String leaveMessage = "%p% left the game!";
@@ -94,94 +85,90 @@ public class Main extends JavaPlugin implements Listener{
 
 		this.saveDefaultConfig();
 		this.customCraft = this.getConfig().getBoolean("customCrafting");
-		this.trident = this.getConfig().getBoolean("trident");
-		this.spatha = this.getConfig().getBoolean("spatha");
-		this.pitchfork = this.getConfig().getBoolean("pitchfork");
-		this.sunbow = this.getConfig().getBoolean("sunBow");
-		this.moonbow = this.getConfig().getBoolean("moonBow");
 		this.fireworkOnJoin = this.getConfig().getBoolean("fireworkOnJoin");
 		this.joinMessage = this.getConfig().getString("joinMessage");
 		this.leaveMessage = this.getConfig().getString("leaveMessage");
+		this.ZeusRankName = this.getConfig().getString("Zeus");
+		this.JupiterRankName = this.getConfig().getString("Jupiter");
+		this.PoseidonRankName = this.getConfig().getString("Poseidon");
+		this.NeptuneRankName = this.getConfig().getString("Neptune");
+		this.HadesRankName = this.getConfig().getString("Hades");
+		this.PlutoRankName = this.getConfig().getString("Pluto");
 
 		if (customCraft) {
+			
 			// weapon of Poseidon
-			if(trident) {
-				ItemStack trident = new ItemStack(Material.TRIDENT, 1);
-				trident.addEnchantment(Enchantment.DAMAGE_ALL, 3);
-				trident.addEnchantment(Enchantment.RIPTIDE, 3);
-				trident.addEnchantment(Enchantment.MENDING, 1);
+			ItemStack trident = new ItemStack(Material.TRIDENT); {
 				ItemMeta meta = trident.getItemMeta();
-				meta.setUnbreakable(true);
-				meta.setDisplayName(ChatColor.AQUA + "Trident " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
+				meta.addEnchant(Enchantment.RIPTIDE, 3, false);
+				meta.setDisplayName(ChatColor.AQUA + "Trident");
 				trident.setItemMeta(meta);
-
-				ShapedRecipe trecipe = new ShapedRecipe(new ItemStack(trident));
-				trecipe.shape(" { ", "{{{", "***");
-				trecipe.setIngredient('*', Material.DIAMOND);
-				trecipe.setIngredient('{', Material.IRON_INGOT);
-				getServer().addRecipe(trecipe);
 			}
+				
+			ShapedRecipe trecipe = new ShapedRecipe(trident);
+			trecipe.shape("***", "{{{", " { ");
+			trecipe.setIngredient('*', Material.DIAMOND);
+			trecipe.setIngredient('{', Material.IRON_INGOT);
+			Bukkit.addRecipe(trecipe);
+			
 			// weapon of zeus
-			if(spatha) {
-
-				ItemStack spatha = new ItemStack(Material.GOLDEN_SWORD, 1);
-				spatha.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
-				spatha.addEnchantment(Enchantment.FIRE_ASPECT, 1);
-				spatha.addEnchantment(Enchantment.MENDING, 1);
+			ItemStack spatha = new ItemStack(Material.GOLDEN_SWORD); {
 				ItemMeta meta2 = spatha.getItemMeta();
+				meta2.addEnchant(Enchantment.DAMAGE_ALL, 3, false);
 				meta2.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
 				spatha.setItemMeta(meta2);
-
-				ShapedRecipe srecipe = new ShapedRecipe(new ItemStack(spatha));
-				srecipe.shape(" + ", " # ", " # ");
-				srecipe.setIngredient('+', Material.BLAZE_ROD);
-				srecipe.setIngredient('#', Material.GOLD_INGOT);
-				getServer().addRecipe(srecipe);
 			}
+			
+			ShapedRecipe srecipe = new ShapedRecipe(spatha);
+			srecipe.shape(" # ", " # ", " + ");
+			srecipe.setIngredient('+', Material.BLAZE_ROD);
+			srecipe.setIngredient('#', Material.GOLD_INGOT);
+			Bukkit.addRecipe(srecipe);
+			
 			//weapon of hades
-			if(pitchfork) {
-				ItemStack fork = new ItemStack(Material.DIAMOND_SHOVEL, 1);
-				fork.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
+			ItemStack fork = new ItemStack(Material.DIAMOND_SHOVEL, 1); {
 				ItemMeta meta3 = fork.getItemMeta();
 				meta3.setDisplayName(ChatColor.RED + "Pitchfork");
 				fork.setItemMeta(meta3);
-
-				ShapedRecipe frecipe = new ShapedRecipe(new ItemStack(fork));
-				frecipe.shape("*+*", " + ", " + ");
-				frecipe.setIngredient('*', Material.DIAMOND);
-				frecipe.setIngredient('+', Material.BLAZE_ROD);
-				getServer().addRecipe(frecipe);
 			}
+			
+			ShapedRecipe frecipe = new ShapedRecipe(fork);
+			frecipe.shape("*+*", " + ", " + ");
+			frecipe.setIngredient('*', Material.DIAMOND);
+			frecipe.setIngredient('+', Material.BLAZE_ROD);
+			Bukkit.addRecipe(frecipe);
+
 			//weapon of apollo
-			if(sunbow) {
-				ItemStack sunb = new ItemStack(Material.BOW, 1);
+			ItemStack sunb = new ItemStack(Material.BOW, 1); {
 				sunb.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 4);
 				ItemMeta meta4 = sunb.getItemMeta();
+				meta4.addEnchant(Enchantment.ARROW_DAMAGE, 4, false);
 				meta4.setDisplayName(ChatColor.GOLD + "Sun Bow");
 				sunb.setItemMeta(meta4);
-
-				ShapedRecipe sunrecipe = new ShapedRecipe(new ItemStack(sunb));
-				sunrecipe.shape(" +-", "+=-", " +-");
-				sunrecipe.setIngredient('=', Material.GOLD_INGOT);
-				sunrecipe.setIngredient('-', Material.STRING);
-				sunrecipe.setIngredient('+', Material.BLAZE_ROD);
-				getServer().addRecipe(sunrecipe);
-			}
-			//weapon of atemis
-			if(moonbow) {
-				ItemStack moonb = new ItemStack(Material.BOW, 1);
+			} 
+			
+			ShapedRecipe sunrecipe = new ShapedRecipe(sunb);
+			sunrecipe.shape(" +-", "+=-", " +-");
+			sunrecipe.setIngredient('=', Material.GOLD_INGOT);
+			sunrecipe.setIngredient('-', Material.STRING);
+			sunrecipe.setIngredient('+', Material.BLAZE_ROD);
+			Bukkit.addRecipe(sunrecipe);
+			
+			//weapon of artemis
+			ItemStack moonb = new ItemStack(Material.BOW, 1); {
 				moonb.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 4);
 				ItemMeta meta5 = moonb.getItemMeta();
+				meta5.addEnchant(Enchantment.ARROW_DAMAGE, 4, false);
 				meta5.setDisplayName(ChatColor.BLUE + "Moon Bow");
 				moonb.setItemMeta(meta5);
-
-				ShapedRecipe moonrecipe = new ShapedRecipe(new ItemStack(moonb));
-				moonrecipe.shape(" +-", "+*-", " +-");
-				moonrecipe.setIngredient('*', Material.DIAMOND);
-				moonrecipe.setIngredient('-', Material.STRING);
-				moonrecipe.setIngredient('+', Material.BLAZE_ROD);
-				getServer().addRecipe(moonrecipe);
 			}
+			
+			ShapedRecipe moonrecipe = new ShapedRecipe(moonb);
+			moonrecipe.shape(" +-", "+*-", " +-");
+			moonrecipe.setIngredient('*', Material.DIAMOND);
+			moonrecipe.setIngredient('-', Material.STRING);
+			moonrecipe.setIngredient('+', Material.BLAZE_ROD);
+			Bukkit.addRecipe(moonrecipe); 
 		}
 
 
@@ -924,24 +911,20 @@ public class Main extends JavaPlugin implements Listener{
 
 	}
 
-	@EventHandler
+	 @EventHandler
 	public void onPlayerInteract(final PlayerInteractEvent e) {
 		final Player p = (Player) e.getPlayer();
 
 
 		//zeus
 		ItemStack zeusc = new ItemStack(Material.GOLDEN_SWORD, 1);
-		zeusc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
-		zeusc.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 1);
-		zeusc.addUnsafeEnchantment(Enchantment.MENDING, 1);
+		zeusc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 3);
 		ItemMeta meta = zeusc.getItemMeta();
 		meta.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
 		zeusc.setItemMeta(meta);
 
 		ItemStack zeusuc = new ItemStack(Material.GOLDEN_SWORD, 1);
-		zeusuc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
-		zeusuc.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 1);
-		zeusuc.addUnsafeEnchantment(Enchantment.MENDING, 1);
+		zeusuc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 3);
 		ItemMeta meta1 = zeusuc.getItemMeta();
 		meta1.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.RED + " Uncharged");
 		zeusuc.setItemMeta(meta1);
@@ -949,7 +932,6 @@ public class Main extends JavaPlugin implements Listener{
 
 
 		if(!(e.getAction() == Action.RIGHT_CLICK_AIR) && !(e.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
-		if(!(e.getItem().getType() == Material.GOLDEN_SWORD)) return; 
 
 		if(!cooldownz.contains(p)) {
 			if(p.getInventory().getItemInMainHand().isSimilar(zeusc)) {
@@ -972,9 +954,8 @@ public class Main extends JavaPlugin implements Listener{
 				} 
 			} else if(p.getInventory().getItemInMainHand().isSimilar(zeusuc)) {
 
-				if(p.hasPermission("demicraft.zeus.smite") || p.hasPermission("demicraft.jupiter.smite")) {
+				if(p.hasPermission("demicraft.zeus.smite") || p.hasPermission("demicraft.jupiter.smite"))
 					p.getInventory().getItemInMainHand().setItemMeta(meta);
-				} 
 			}
 		}
 	}

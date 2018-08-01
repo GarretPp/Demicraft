@@ -1,20 +1,7 @@
-######################
-## Crafting Section ##
-######################
-
-customCrafting: false
-########################################################################
-## If custom crafting is true choose what custom crafting you want on ##
-########################################################################
-## Custom Weapons ##
-####################
-trident: true
-spatha: true
-pitchfork: true
-sunBow: true
-moonBow: true
-
-
+##############
+## Crafting ##
+##############
+customCrafting: true
 
 #################
 ## Join/Leave ##
