@@ -13,25 +13,6 @@ spatha: true
 pitchfork: true
 sunBow: true
 moonBow: true
-spear: true
-forgeHammer: true
-cadusus: true
-thyrsuss: true
-venustas: true
-prudentia: true
-panflute: true
-###################
-## Emerald Items ##
-###################
-emeraldHelmet: true
-emeraldChestplate: true
-emeraldLeggings: true
-emeraldBoots: true
-emeraldSword: true
-##########
-## Misc ##
-##########
-saddle: true
 
 
 
@@ -41,3 +22,15 @@ saddle: true
 joinMessage: p% joined the game!
 leaveMessage: p% left the game!
 fireworkOnJoin: false
+
+##################
+##  Demi GUI    ##
+## Rank Control ##
+##################
+demiGUI: true
+ZeusRankName: Zeus
+JupiterRankName: Jupiter
+PoseidonRankName: Poseidon
+NeptuneRankName: Neptune
+HadesRankName: Hades
+PlutoRankName: Pluto

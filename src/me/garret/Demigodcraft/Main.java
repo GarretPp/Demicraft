@@ -17,13 +17,10 @@ import org.bukkit.FireworkEffect.Type;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Animals;
 import org.bukkit.entity.Boat;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
@@ -31,7 +28,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -51,6 +47,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import ru.tehkode.permissions.PermissionUser;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
 
 public class Main extends JavaPlugin implements Listener{
 
@@ -58,13 +57,15 @@ public class Main extends JavaPlugin implements Listener{
 
 	public ArrayList<Player> cooldownz = new ArrayList<Player>();
 	public ArrayList<Player> cooldownp = new ArrayList<Player>();
+	public ArrayList<Player> cooldowndb = new ArrayList<Player>();
+	public ArrayList<Player> cooldownap = new ArrayList<Player>();
 	public List<String> hermer = new ArrayList<String>();
 	public List<String> armar = new ArrayList<String>();
 	public List<String> zeju = new ArrayList<String>();
 	public List<String> hephvul = new ArrayList<String>();
 	public List<String> athmen = new ArrayList<String>();
 	public List<String> hunt = new ArrayList<String>();
-	public List<String> titan = new ArrayList<String>();
+	public List<String> hero = new ArrayList<String>();
 	public List<String> divine = new ArrayList<String>(); 
 	public List<String> aphven = new ArrayList<String>(); 
 	public List<String> godGlow = new ArrayList<String>(); 
@@ -76,22 +77,16 @@ public class Main extends JavaPlugin implements Listener{
 	public boolean pitchfork = true;
 	public boolean sunbow = true;
 	public boolean moonbow = true;
-	public boolean spear = true;
-	public boolean forgeHammer = true;
-	public boolean cadusus = true;
-	public boolean thyrsus = true;
-	public boolean venustas = true;
-	public boolean prudentia = true;
-	public boolean panflute = true;
-	public boolean emeraldHelmet = true;
-	public boolean emeraldChestplate = true;
-	public boolean emeraldLeggings = true;
-	public boolean emeraldBoots = true;
-	public boolean emeraldSword = true;
-	public boolean saddle = true;
 	public boolean fireworkOnJoin = true;
 	public String joinMessage = "%p% joined the game!";
 	public String leaveMessage = "%p% left the game!";
+	public boolean demiGUI = true;
+	public String ZeusRankName = "Zeus";
+	public String JupiterRankName = "Jupiter";
+	public String PoseidonRankName = "Poseidon";
+	public String NeptuneRankName = "Neptune";
+	public String HadesRankName = "Hades";
+	public String PlutoRankName = "Pluto";
 
 	@Override
 	public void onEnable() {
@@ -104,19 +99,6 @@ public class Main extends JavaPlugin implements Listener{
 		this.pitchfork = this.getConfig().getBoolean("pitchfork");
 		this.sunbow = this.getConfig().getBoolean("sunBow");
 		this.moonbow = this.getConfig().getBoolean("moonBow");
-		this.spear = this.getConfig().getBoolean("spear");
-		this.forgeHammer = this.getConfig().getBoolean("forgeHammer");
-		this.cadusus = this.getConfig().getBoolean("cadusus");
-		this.thyrsus = this.getConfig().getBoolean("thyrsus");
-		this.venustas = this.getConfig().getBoolean("venustas");
-		this.prudentia = this.getConfig().getBoolean("prudentia");
-		this.panflute = this.getConfig().getBoolean("panflute");
-		this.emeraldHelmet = this.getConfig().getBoolean("emeraldHelmet");
-		this.emeraldChestplate = this.getConfig().getBoolean("emeraldChestplate");
-		this.emeraldLeggings = this.getConfig().getBoolean("emeraldLeggings");
-		this.emeraldBoots = this.getConfig().getBoolean("emeraldBoots");
-		this.emeraldSword = this.getConfig().getBoolean("emeraldSword");
-		this.saddle = this.getConfig().getBoolean("saddle");
 		this.fireworkOnJoin = this.getConfig().getBoolean("fireworkOnJoin");
 		this.joinMessage = this.getConfig().getString("joinMessage");
 		this.leaveMessage = this.getConfig().getString("leaveMessage");
@@ -124,36 +106,41 @@ public class Main extends JavaPlugin implements Listener{
 		if (customCraft) {
 			// weapon of Poseidon
 			if(trident) {
-				ItemStack trident = new ItemStack(Material.DIAMOND_HOE, 1);
-				trident.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
+				ItemStack trident = new ItemStack(Material.TRIDENT, 1);
+				trident.addEnchantment(Enchantment.DAMAGE_ALL, 3);
+				trident.addEnchantment(Enchantment.RIPTIDE, 3);
+				trident.addEnchantment(Enchantment.MENDING, 1);
 				ItemMeta meta = trident.getItemMeta();
 				meta.setUnbreakable(true);
 				meta.setDisplayName(ChatColor.AQUA + "Trident " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
 				trident.setItemMeta(meta);
 
 				ShapedRecipe trecipe = new ShapedRecipe(new ItemStack(trident));
-				trecipe.shape("*$*", " $ ", " $ ");
+				trecipe.shape(" { ", "{{{", "***");
 				trecipe.setIngredient('*', Material.DIAMOND);
-				trecipe.setIngredient('$', Material.STICK);
+				trecipe.setIngredient('{', Material.IRON_INGOT);
 				getServer().addRecipe(trecipe);
 			}
 			// weapon of zeus
 			if(spatha) {
 
-				ItemStack spatha = new ItemStack(Material.BLAZE_ROD, 1);
-				spatha.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
+				ItemStack spatha = new ItemStack(Material.GOLDEN_SWORD, 1);
+				spatha.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+				spatha.addEnchantment(Enchantment.FIRE_ASPECT, 1);
+				spatha.addEnchantment(Enchantment.MENDING, 1);
 				ItemMeta meta2 = spatha.getItemMeta();
 				meta2.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
 				spatha.setItemMeta(meta2);
 
 				ShapedRecipe srecipe = new ShapedRecipe(new ItemStack(spatha));
-				srecipe.shape("+  ", " + ", "  +");
+				srecipe.shape(" + ", " # ", " # ");
 				srecipe.setIngredient('+', Material.BLAZE_ROD);
+				srecipe.setIngredient('#', Material.GOLD_INGOT);
 				getServer().addRecipe(srecipe);
 			}
 			//weapon of hades
 			if(pitchfork) {
-				ItemStack fork = new ItemStack(Material.DIAMOND_SPADE, 1);
+				ItemStack fork = new ItemStack(Material.DIAMOND_SHOVEL, 1);
 				fork.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
 				ItemMeta meta3 = fork.getItemMeta();
 				meta3.setDisplayName(ChatColor.RED + "Pitchfork");
@@ -195,179 +182,6 @@ public class Main extends JavaPlugin implements Listener{
 				moonrecipe.setIngredient('+', Material.BLAZE_ROD);
 				getServer().addRecipe(moonrecipe);
 			}
-			//weapon of ares
-			if(spear) {
-				ItemStack spear = new ItemStack(Material.STICK, 1);
-				spear.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
-				ItemMeta meta6 = spear.getItemMeta();
-				meta6.setDisplayName(ChatColor.YELLOW + "Spear");
-				spear.setItemMeta(meta6);
-
-				ShapedRecipe sprecipe = new ShapedRecipe(new ItemStack(spear));
-				sprecipe.shape("  *", " $ ", "$  ");
-				sprecipe.setIngredient('*', Material.DIAMOND);
-				sprecipe.setIngredient('$', Material.STICK);
-				getServer().addRecipe(sprecipe);
-			}
-			//weapon of hephaestus
-			if(forgeHammer) {
-				ItemStack fhammer = new ItemStack(Material.DIAMOND_AXE, 1);
-				fhammer.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
-				ItemMeta meta7 = fhammer.getItemMeta();
-				meta7.setDisplayName(ChatColor.RED + "Forge Hammer");
-				fhammer.setItemMeta(meta7);
-
-				ShapedRecipe fhrecipe = new ShapedRecipe(new ItemStack(fhammer));
-				fhrecipe.shape(" **", " +*", " + ");
-				fhrecipe.setIngredient('*', Material.DIAMOND);
-				fhrecipe.setIngredient('+', Material.BLAZE_ROD);
-				getServer().addRecipe(fhrecipe);
-			}
-			//weapon of hermes
-			if(cadusus) {
-				ItemStack cadus = new ItemStack(Material.BLAZE_ROD, 1);
-				cadus.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
-				ItemMeta meta8 = cadus.getItemMeta();
-				meta8.setDisplayName(ChatColor.YELLOW + "Cadusus");
-				cadus.setItemMeta(meta8);
-
-				ShapedRecipe cadrecipe = new ShapedRecipe(new ItemStack(cadus));
-				cadrecipe.shape("  *", " + ", "+  ");
-				cadrecipe.setIngredient('*', Material.DIAMOND);
-				cadrecipe.setIngredient('+', Material.BLAZE_ROD);
-				getServer().addRecipe(cadrecipe);
-			}
-			//weapon of dionysus
-			if(thyrsus) {
-				ItemStack thyrsus = new ItemStack(Material.STICK, 1);
-				thyrsus.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
-				ItemMeta meta9 = thyrsus.getItemMeta();
-				meta9.setDisplayName(ChatColor.YELLOW + "Thyrsus");
-				thyrsus.setItemMeta(meta9);
-
-				ShapedRecipe thyrecipe = new ShapedRecipe(new ItemStack(thyrsus));
-				thyrecipe.shape("  ^", " + ", "+  ");
-				thyrecipe.setIngredient('^', Material.CARROT_ITEM);
-				thyrecipe.setIngredient('+', Material.BLAZE_ROD);
-				getServer().addRecipe(thyrecipe);
-			}
-			//Weapon of Aphrodite
-			if(venustas) {
-				ItemStack Venustas = new ItemStack(Material.DIAMOND_SWORD, 1);
-				Venustas.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
-				ItemMeta meta10 = Venustas.getItemMeta();
-				meta10.setDisplayName(ChatColor.DARK_PURPLE + "Venustas");
-				Venustas.setItemMeta(meta10);
-
-				ShapedRecipe venrecipe = new ShapedRecipe(new ItemStack(Venustas));
-				venrecipe.shape(" * ", " * ", " + ");
-				venrecipe.setIngredient('*', Material.DIAMOND);
-				venrecipe.setIngredient('+', Material.BLAZE_ROD);
-				getServer().addRecipe(venrecipe);
-			}
-			//Weapon of Athena
-			if(prudentia) { 
-				ItemStack Prudentia = new ItemStack(Material.IRON_SWORD, 1);
-				Prudentia.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
-				Prudentia.addUnsafeEnchantment(Enchantment.DURABILITY, 4);
-				ItemMeta meta11 = Prudentia.getItemMeta();
-				meta11.setDisplayName(ChatColor.DARK_PURPLE + "Prudentia");
-				Prudentia.setItemMeta(meta11);
-
-				ShapedRecipe prurecipe = new ShapedRecipe(new ItemStack(Prudentia));
-				prurecipe.shape(" @ ", " # ", " + ");
-				prurecipe.setIngredient('@', Material.IRON_INGOT);
-				prurecipe.setIngredient('#', Material.GOLD_INGOT);
-				prurecipe.setIngredient('+', Material.BLAZE_ROD);
-				getServer().addRecipe(prurecipe);
-			}
-
-			if(panflute) {
-				ItemStack Panflute = new ItemStack(Material.STICK, 1);
-				Panflute.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
-				Panflute.addUnsafeEnchantment(Enchantment.DURABILITY, 4);
-				ItemMeta meta12 = Panflute.getItemMeta();
-				meta12.setDisplayName(ChatColor.GREEN + "Panflute");
-				Panflute.setItemMeta(meta12);
-
-				ShapedRecipe panrecipe = new ShapedRecipe(new ItemStack(Panflute));
-				panrecipe.shape(" s ", " m ", " s ");
-				panrecipe.setIngredient('s', Material.STICK);
-				panrecipe.setIngredient('m', Material.NOTE_BLOCK);
-				getServer().addRecipe(panrecipe);
-			}
-
-			if(emeraldChestplate) {
-				ItemStack ec = new ItemStack(Material.DIAMOND_CHESTPLATE, 1);
-				ec.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
-				ItemMeta meta13 = ec.getItemMeta();
-				meta13.setDisplayName(ChatColor.GREEN + "Emerald Chestplate");
-				ec.setItemMeta(meta13);
-
-				ShapedRecipe ecrecipe = new ShapedRecipe(new ItemStack(ec));
-				ecrecipe.shape("e e", "eee", "eee");
-				ecrecipe.setIngredient('e', Material.EMERALD);
-				getServer().addRecipe(ecrecipe);
-			}
-
-			if(emeraldLeggings) {
-				ItemStack el = new ItemStack(Material.DIAMOND_LEGGINGS, 1);
-				el.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
-				ItemMeta meta14 = el.getItemMeta();
-				meta14.setDisplayName(ChatColor.GREEN + "Emerald Legginigs");
-				el.setItemMeta(meta14);
-
-				ShapedRecipe elrecipe = new ShapedRecipe(new ItemStack(el));
-				elrecipe.shape("eee", "e e", "e e");
-				elrecipe.setIngredient('e', Material.EMERALD);
-				getServer().addRecipe(elrecipe);
-			}
-
-			if(emeraldBoots) {
-				ItemStack eb = new ItemStack(Material.DIAMOND_BOOTS, 1);
-				eb.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
-				ItemMeta meta15 = eb.getItemMeta();
-				meta15.setDisplayName(ChatColor.GREEN + "Emerald Boots");
-				eb.setItemMeta(meta15);
-
-				ShapedRecipe ebrecipe = new ShapedRecipe(new ItemStack(eb));
-				ebrecipe.shape("   ", "e e", "e e");
-				ebrecipe.setIngredient('e', Material.EMERALD);
-				getServer().addRecipe(ebrecipe);
-			}
-
-			if(emeraldHelmet) {
-				ItemStack eh = new ItemStack(Material.DIAMOND_HELMET, 1);
-				eh.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
-				ItemMeta meta16 = eh.getItemMeta();
-				meta16.setDisplayName(ChatColor.GREEN + "Emerald Helmet");
-				eh.setItemMeta(meta16);
-
-				ShapedRecipe ehrecipe = new ShapedRecipe(new ItemStack(eh));
-				ehrecipe.shape("eee", "e e", "   ");
-				ehrecipe.setIngredient('e', Material.EMERALD);
-				getServer().addRecipe(ehrecipe);
-			}
-
-			if(emeraldSword) {
-				ItemStack es = new ItemStack(Material.DIAMOND_SWORD, 1);
-				es.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 7);
-				ItemMeta meta18 = es.getItemMeta();
-				meta18.setDisplayName(ChatColor.GREEN + "Emerald Sword");
-				es.setItemMeta(meta18);
-
-				ShapedRecipe esrecipe = new ShapedRecipe(new ItemStack(es));
-				esrecipe.shape(" e ", " e ", " s ");
-				esrecipe.setIngredient('e', Material.EMERALD);
-				esrecipe.setIngredient('s', Material.STICK);
-				getServer().addRecipe(esrecipe);
-			}
-
-			if(saddle) {
-				ShapedRecipe saddle = new ShapedRecipe(new ItemStack(Material.SADDLE));
-				saddle.shape(new String[]{"lll","~ ~","   "}).setIngredient('l', Material.LEATHER).setIngredient('~', Material.STRING);
-				Bukkit.getServer().addRecipe(saddle);
-			}
 		}
 
 
@@ -384,6 +198,7 @@ public class Main extends JavaPlugin implements Listener{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) { 
 		Player player = (Player) sender;
+		final Player cp = (Player) sender;
 
 		if (args.length == 0) {
 			if(sender instanceof Player) {
@@ -572,8 +387,22 @@ public class Main extends JavaPlugin implements Listener{
 				}
 				else if(cmd.getName().equalsIgnoreCase("dionysus")) {
 					if(player.hasPermission("demicraft.dionysus")) {
-						player.setFoodLevel(20);
-						player.sendMessage(ChatColor.GREEN  + "You have been fed");
+						if (!cooldowndb.contains(cp)) {
+							
+							player.setFoodLevel(20);
+							player.setSaturation(5);
+							player.sendMessage(ChatColor.GREEN  + "You have been fed");
+							// Cool down
+							cooldowndb.add(cp);
+							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+								public void run(){
+									cooldowndb.remove(cp);
+								}
+							}, 1200);
+							
+						} else {
+							player.sendMessage(ChatColor.RED + "You can only issue this command once every 60 seconds.");
+						}
 					}
 					else {
 						noPermission(player);
@@ -581,8 +410,21 @@ public class Main extends JavaPlugin implements Listener{
 				}
 				else if(cmd.getName().equalsIgnoreCase("apollo")) {
 					if(player.hasPermission("demicraft.apollo")) {
-						player.setHealth(20.0);
-						player.sendMessage(ChatColor.GREEN  + "You have been healed");
+						if (!cooldownap.contains(cp)) {
+
+							player.setHealth(20.0);
+							player.sendMessage(ChatColor.GREEN  + "You have been healed");
+							// Cool down
+							cooldownap.add(cp);
+							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+								public void run(){
+									cooldownap.remove(cp);
+								}
+							}, 1200);
+							
+						} else {
+							player.sendMessage(ChatColor.RED + "You can only issue this command once every 60 seconds.");
+						}
 					}
 					else {
 						noPermission(player);
@@ -590,8 +432,22 @@ public class Main extends JavaPlugin implements Listener{
 				}
 				else if(cmd.getName().equalsIgnoreCase("bacchus")) {
 					if(player.hasPermission("demicraft.bacchus")) {
-						player.setFoodLevel(20);
-						player.sendMessage(ChatColor.GREEN  + "You have been fed");
+						if (!cooldowndb.contains(cp)) {
+
+							player.setFoodLevel(20);
+							player.setSaturation(5);
+							player.sendMessage(ChatColor.GREEN  + "You have been fed");
+							// Cool down
+							cooldowndb.add(cp);
+							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+								public void run(){
+									cooldowndb.remove(cp);
+								}
+							}, 1200);
+							
+						} else {
+							player.sendMessage(ChatColor.RED + "You can only issue this command once every 60 seconds.");
+						}
 					}
 					else {
 						noPermission(player);
@@ -599,17 +455,30 @@ public class Main extends JavaPlugin implements Listener{
 				}
 				else if(cmd.getName().equalsIgnoreCase("phoebus")) {
 					if(player.hasPermission("demicraft.phoebus")) {
-						player.setHealth(20.0);
-						player.sendMessage(ChatColor.GREEN  + "You have been healed");
+						if (!cooldownap.contains(cp)) {
+
+							player.setHealth(20.0);
+							player.sendMessage(ChatColor.GREEN  + "You have been healed");
+							// Cool down
+							cooldownap.add(cp);
+							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+								public void run(){
+									cooldownap.remove(cp);
+								}
+							}, 1200);
+							
+						} else {
+							player.sendMessage(ChatColor.RED + "You can only issue this command once every 60 seconds.");
+						}
 					}
 					else {
 						noPermission(player);
 					}
 				}
-				else if(cmd.getName().equalsIgnoreCase("titan")) {
-					if (player.hasPermission("demicraft.titan")) {
+				else if(cmd.getName().equalsIgnoreCase("hero")) {
+					if (player.hasPermission("demicraft.hero")) {
 
-						if(!titan.contains(player.getName())) {
+						if(!hero.contains(player.getName())) {
 
 							player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 8000000, 1));
 							player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 8000000, 1));
@@ -617,8 +486,8 @@ public class Main extends JavaPlugin implements Listener{
 							player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 8000000, 1));
 
 
-							player.sendMessage(ChatColor.GREEN  + "You have the power of a Titan!");
-							titan.add(player.getName());
+							player.sendMessage(ChatColor.GREEN  + "You have the power of a Hero!");
+							hero.add(player.getName());
 
 						} else {
 
@@ -628,7 +497,7 @@ public class Main extends JavaPlugin implements Listener{
 							player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
 
 							player.sendMessage(ChatColor.GREEN + "You have lost your power!");
-							titan.remove(player.getName());
+							hero.remove(player.getName());
 
 						}
 
@@ -645,7 +514,7 @@ public class Main extends JavaPlugin implements Listener{
 							player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 8000000, 2));
 							player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 8000000, 2));
 							player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 8000000, 2));
-
+							
 							player.sendMessage(ChatColor.GREEN  + "You have the power of a God!");
 							divine.add(player.getName());
 
@@ -666,8 +535,8 @@ public class Main extends JavaPlugin implements Listener{
 						noPermission(player);
 					}
 				}
-				else if(cmd.getName().equalsIgnoreCase("demihelp")) {
-					if (player.hasPermission("demicraft.help")) {
+				else if(cmd.getName().equalsIgnoreCase("demichoose") && demiGUI == true) {
+					if (player.hasPermission("demicraft.choose")) {
 						openGuiChoose(player);
 					} else {
 						noPermission(player);
@@ -675,27 +544,27 @@ public class Main extends JavaPlugin implements Listener{
 				}
 				else if(cmd.getName().equalsIgnoreCase("bless")) {
 					if(player.hasPermission("demicraft.bless")) {
-						if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_SWORD || player.getInventory().getItemInMainHand().getType() == Material.IRON_SWORD || player.getInventory().getItemInMainHand().getType() == Material.GOLD_SWORD || player.getInventory().getItemInMainHand().getType() == Material.WOOD_SWORD || player.getInventory().getItemInMainHand().getType() == Material.STONE_SWORD) {
+						if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_SWORD || player.getInventory().getItemInMainHand().getType() == Material.IRON_SWORD || player.getInventory().getItemInMainHand().getType() == Material.GOLDEN_SWORD || player.getInventory().getItemInMainHand().getType() == Material.WOODEN_SWORD || player.getInventory().getItemInMainHand().getType() == Material.STONE_SWORD) {
 							player.getInventory().getItemInMainHand().addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 2);
 							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getInventory().getItemInMainHand().getType());
 
 						}
-						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_HELMET|| player.getInventory().getItemInMainHand().getType() == Material.IRON_HELMET|| player.getInventory().getItemInMainHand().getType() == Material.GOLD_HELMET|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_HELMET) {
+						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_HELMET|| player.getInventory().getItemInMainHand().getType() == Material.IRON_HELMET|| player.getInventory().getItemInMainHand().getType() == Material.GOLDEN_HELMET|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_HELMET) {
 							player.getInventory().getItemInMainHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
 							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getInventory().getItemInMainHand().getType());
 
 						}
-						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_CHESTPLATE|| player.getInventory().getItemInMainHand().getType() == Material.IRON_CHESTPLATE|| player.getInventory().getItemInMainHand().getType() == Material.GOLD_CHESTPLATE|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_CHESTPLATE) {
+						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_CHESTPLATE|| player.getInventory().getItemInMainHand().getType() == Material.IRON_CHESTPLATE|| player.getInventory().getItemInMainHand().getType() == Material.GOLDEN_CHESTPLATE|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_CHESTPLATE) {
 							player.getInventory().getItemInMainHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
 							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getInventory().getItemInMainHand().getType());
 
 						}
-						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_LEGGINGS|| player.getInventory().getItemInMainHand().getType() == Material.IRON_LEGGINGS|| player.getInventory().getItemInMainHand().getType() == Material.GOLD_LEGGINGS|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_LEGGINGS) {
+						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_LEGGINGS|| player.getInventory().getItemInMainHand().getType() == Material.IRON_LEGGINGS|| player.getInventory().getItemInMainHand().getType() == Material.GOLDEN_LEGGINGS|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_LEGGINGS) {
 							player.getInventory().getItemInMainHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
 							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getInventory().getItemInMainHand().getType());
 
 						}
-						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_BOOTS|| player.getInventory().getItemInMainHand().getType() == Material.IRON_BOOTS|| player.getInventory().getItemInMainHand().getType() == Material.GOLD_BOOTS|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_BOOTS) {
+						else if(player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_BOOTS|| player.getInventory().getItemInMainHand().getType() == Material.IRON_BOOTS|| player.getInventory().getItemInMainHand().getType() == Material.GOLDEN_BOOTS|| player.getInventory().getItemInMainHand().getType() == Material.LEATHER_BOOTS) {
 							player.getInventory().getItemInMainHand().addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
 							player.sendMessage(ChatColor.GREEN  + "You have blessed " + player.getInventory().getItemInMainHand().getType());
 
@@ -933,6 +802,7 @@ public class Main extends JavaPlugin implements Listener{
 						else if(cmd.getName().equalsIgnoreCase("dionysus")) {
 							if(player.hasPermission("demicraft.give.dionysus")) {
 								t.setFoodLevel(20);
+								player.setSaturation(5);
 								t.sendMessage(ChatColor.GREEN  + "You have been fed");
 								getEffect(player, t, cmd);
 							}
@@ -953,6 +823,7 @@ public class Main extends JavaPlugin implements Listener{
 						else if(cmd.getName().equalsIgnoreCase("bacchus")) {
 							if(player.hasPermission("demicraft.give.bacchus")) {
 								t.setFoodLevel(20);
+								player.setSaturation(5);
 								t.sendMessage(ChatColor.GREEN  + "You have been fed");
 								getEffect(player, t, cmd);
 							}
@@ -970,14 +841,14 @@ public class Main extends JavaPlugin implements Listener{
 								noPermission(player);
 							}
 						}
-						else if(cmd.getName().equalsIgnoreCase("titan")) {
-							if (player.hasPermission("demicraft.give.titan")) {
+						else if(cmd.getName().equalsIgnoreCase("hero")) {
+							if (player.hasPermission("demicraft.give.hero")) {
 	
-								if(!titan.contains(t.getName())) {
+								if(!hero.contains(t.getName())) {
 	
-									t.sendMessage(ChatColor.GREEN  + "You have the power of a Titan!");
+									t.sendMessage(ChatColor.GREEN  + "You have the power of a Hero!");
 									getEffect(player, t, cmd);
-									titan.add(t.getName());
+									hero.add(t.getName());
 	
 								} else {
 	
@@ -988,7 +859,7 @@ public class Main extends JavaPlugin implements Listener{
 	
 									t.sendMessage(ChatColor.GREEN + "You have lost your power!");
 									looseEffect(player, t, cmd);
-									titan.remove(t.getName());
+									hero.remove(t.getName());
 	
 								}
 	
@@ -1036,9 +907,9 @@ public class Main extends JavaPlugin implements Listener{
 		Boat b = (Boat) e.getVehicle();
 		Player p = (Player) e.getEntered();
 
-		if(p.hasPermission("demicraft.posnep.boat")) {
+		if(p.hasPermission("demicraft.poseidon.boat") || p.hasPermission("demicraft.neptune.boat")) {
 
-			b.setMaxSpeed(0.9D);;
+			b.setMaxSpeed(2.0D);;
 			p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
 		} else {
 
@@ -1059,37 +930,26 @@ public class Main extends JavaPlugin implements Listener{
 
 
 		//zeus
-		ItemStack zeusc = new ItemStack(Material.BLAZE_ROD, 1);
-		zeusc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
+		ItemStack zeusc = new ItemStack(Material.GOLDEN_SWORD, 1);
+		zeusc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+		zeusc.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 1);
+		zeusc.addUnsafeEnchantment(Enchantment.MENDING, 1);
 		ItemMeta meta = zeusc.getItemMeta();
 		meta.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
 		zeusc.setItemMeta(meta);
 
-		ItemStack zeusuc = new ItemStack(Material.BLAZE_ROD, 1);
-		zeusuc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
+		ItemStack zeusuc = new ItemStack(Material.GOLDEN_SWORD, 1);
+		zeusuc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+		zeusuc.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 1);
+		zeusuc.addUnsafeEnchantment(Enchantment.MENDING, 1);
 		ItemMeta meta1 = zeusuc.getItemMeta();
 		meta1.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.RED + " Uncharged");
 		zeusuc.setItemMeta(meta1);
 
 
-		//poseidon
-		ItemStack posc = new ItemStack(Material.DIAMOND_HOE, 1);
-		posc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
-		ItemMeta metapos = posc.getItemMeta();
-		metapos.setUnbreakable(true);
-		metapos.setDisplayName(ChatColor.AQUA + "Trident " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
-		posc.setItemMeta(metapos);
-
-		ItemStack posuc = new ItemStack(Material.DIAMOND_HOE, 1);
-		posuc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
-		ItemMeta metapos1 = posuc.getItemMeta();
-		metapos1.setUnbreakable(true);
-		metapos1.setDisplayName(ChatColor.AQUA + "Trident " + ChatColor.GRAY + "-" + ChatColor.RED + " Uncharged");
-		posuc.setItemMeta(metapos1);
-
 
 		if(!(e.getAction() == Action.RIGHT_CLICK_AIR) && !(e.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
-		if(!(e.getItem().getType() == Material.BLAZE_ROD) && !(e.getItem().getType() == Material.DIAMOND_HOE)) return; 
+		if(!(e.getItem().getType() == Material.GOLDEN_SWORD)) return; 
 
 		if(!cooldownz.contains(p)) {
 			if(p.getInventory().getItemInMainHand().isSimilar(zeusc)) {
@@ -1117,60 +977,6 @@ public class Main extends JavaPlugin implements Listener{
 				} 
 			}
 		}
-		if(!cooldownp.contains(p)) {
-			if(p.getInventory().getItemInMainHand().isSimilar(posc)) {
-
-				if(p.hasPermission("demicraft.poseidon.shoot") || p.hasPermission("demicraft.neptune.shoot")) {
-
-					p.getInventory().getItemInMainHand().setItemMeta(metapos1);
-	                
-					Snowball snowball = p.getWorld().spawn(p.getEyeLocation(), Snowball.class);
-					snowball.setShooter(p);
-					snowball.setVelocity(p.getLocation().getDirection().multiply(2.0));
-					cooldownp.add(p);
-					// Cool down
-					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
-						public void run(){
-							cooldownp.remove(p);
-						}
-					}, 50);
-
-
-
-				} 
-			} else if(p.getInventory().getItemInMainHand().isSimilar(posuc)) {
-
-				if(p.hasPermission("demicraft.poseidon.shoot") || p.hasPermission("demicraft.neptune.shoot")) {
-					p.getInventory().getItemInMainHand().setItemMeta(metapos);
-				} 
-			}
-		}
-	}
-
-	@EventHandler public void onProjectileHit(ProjectileHitEvent e) 
-	{
-		
-		Projectile projectile = (Projectile) e.getEntity();
-		Entity possibleTarget = projectile.getNearbyEntities(1, 1, 1).get(0);
-		
-		if(possibleTarget == null)
-			return;
-
-		if (projectile instanceof Snowball) 
-		{
-			if (possibleTarget instanceof Player) 
-			{ 
-				if (e.getEntity().getShooter() instanceof Player) {
-					Player shooter = (Player) e.getEntity().getShooter();
-					if (shooter.hasPermission("demicraft.poseidon.shoot") || shooter.hasPermission("demicraft.neptune.shoot"))
-					{
-						Player target = (Player) possibleTarget;
-						target.damage(3);
-					}
-				}
-			}
-		}
-
 	}
 
 	@EventHandler
@@ -1187,7 +993,7 @@ public class Main extends JavaPlugin implements Listener{
 				p.setSaturation(2);
 				p.setFoodLevel(p.getFoodLevel() + 2);
 				p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
-				p.updateInventory();
+				p.updateInventory();;
 				e.setCancelled(true);
 
 			}
@@ -1198,19 +1004,8 @@ public class Main extends JavaPlugin implements Listener{
 	public void onPlayerMove(final PlayerMoveEvent event) {
 
 		final Player p = (Player) event.getPlayer();
-		if (event.getTo().getBlock().isLiquid()) {
-			if(p.hasPermission("demicraft.poseidon") || p.hasPermission("demicraft.neptune")) {
-
-				int mair = p.getMaximumAir();
-				p.setRemainingAir(mair);
-				p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 8000000, 1), true);
-
-			}
-
-		} else {
-			if(p.hasPermission("demicraft.poseidon") || p.hasPermission("demicraft.neptune")) {
-				p.removePotionEffect(PotionEffectType.NIGHT_VISION);
-			}
+		if(p.hasPermission("demicraft.poseidon") || p.hasPermission("demicraft.neptune")) {
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONDUIT_POWER, 8000000, 1), true);
 		}
 	}
 
@@ -1313,10 +1108,20 @@ public class Main extends JavaPlugin implements Listener{
 	public void openGuiGreek(Player p) {
 		Inventory inv = Bukkit.createInventory(null, 9, ChatColor.AQUA + "Greek");
 
-		ItemStack zeusGUI = new ItemStack (Material.BLAZE_ROD);
+		ItemStack zeusGUI = new ItemStack (Material.GOLDEN_SWORD);
 		ItemMeta zeusGUIMeta = zeusGUI.getItemMeta();
 		zeusGUIMeta.setDisplayName(ChatColor.GOLD + "Zeus");
 		zeusGUI.setItemMeta(zeusGUIMeta);
+		
+		ItemStack posGUI = new ItemStack (Material.TRIDENT);
+		ItemMeta posGUIMeta = posGUI.getItemMeta();
+		posGUIMeta.setDisplayName(ChatColor.AQUA + "Poseidon");
+		posGUI.setItemMeta(posGUIMeta);
+		
+		ItemStack hadesGUI = new ItemStack (Material.GOLDEN_SHOVEL);
+		ItemMeta hadesGUIMeta = hadesGUI.getItemMeta();
+		hadesGUIMeta.setDisplayName(ChatColor.RED + "Hades");
+		hadesGUI.setItemMeta(hadesGUIMeta);
 
 
 
@@ -1326,8 +1131,8 @@ public class Main extends JavaPlugin implements Listener{
 		Spacer.setItemMeta(SpacerMeta);
 
 		inv.setItem(0, zeusGUI);
-		inv.setItem(1, Spacer);
-		inv.setItem(2, Spacer);
+		inv.setItem(1, posGUI);
+		inv.setItem(2, hadesGUI);
 		inv.setItem(3, Spacer);
 		inv.setItem(4, Spacer);
 		inv.setItem(5, Spacer);
@@ -1342,10 +1147,20 @@ public class Main extends JavaPlugin implements Listener{
 	public void openGuiRoman(Player p) {
 		Inventory inv = Bukkit.createInventory(null, 9, ChatColor.AQUA + "Roman");
 
-		ItemStack zeusGUI = new ItemStack (Material.BLAZE_ROD);
+		ItemStack zeusGUI = new ItemStack (Material.GOLDEN_SWORD);
 		ItemMeta zeusGUIMeta = zeusGUI.getItemMeta();
 		zeusGUIMeta.setDisplayName(ChatColor.GOLD + "Jupiter");
 		zeusGUI.setItemMeta(zeusGUIMeta);
+		
+		ItemStack nepGUI = new ItemStack (Material.TRIDENT);
+		ItemMeta nepGUIMeta = nepGUI.getItemMeta();
+		nepGUIMeta.setDisplayName(ChatColor.AQUA + "Neptune");
+		nepGUI.setItemMeta(nepGUIMeta);
+		
+		ItemStack plutGUI = new ItemStack (Material.GOLDEN_SHOVEL);
+		ItemMeta plutGUIMeta = plutGUI.getItemMeta();
+		plutGUIMeta.setDisplayName(ChatColor.RED + "Pluto");
+		plutGUI.setItemMeta(plutGUIMeta);
 
 
 
@@ -1355,8 +1170,8 @@ public class Main extends JavaPlugin implements Listener{
 		Spacer.setItemMeta(SpacerMeta);
 
 		inv.setItem(0, zeusGUI);
-		inv.setItem(1, Spacer);
-		inv.setItem(2, Spacer);
+		inv.setItem(1, nepGUI);
+		inv.setItem(2, plutGUI);
 		inv.setItem(3, Spacer);
 		inv.setItem(4, Spacer);
 		inv.setItem(5, Spacer);
@@ -1376,6 +1191,8 @@ public class Main extends JavaPlugin implements Listener{
 
 		Player p =(Player) e.getWhoClicked();
 		String chest = ChatColor.stripColor(e.getInventory().getName());
+		
+		PermissionUser puser = PermissionsEx.getUser(p);
 
 
 		if(e.getCurrentItem()==null || e.getCurrentItem().getType()==Material.AIR || !e.getCurrentItem().hasItemMeta()) {
@@ -1403,9 +1220,21 @@ public class Main extends JavaPlugin implements Listener{
 				return;
 			} else if(ChatColor.stripColor(e.getInventory().getName()).equalsIgnoreCase("Greek")) {
 				switch(e.getCurrentItem().getType()){
-				case BLAZE_ROD:
+				case GOLDEN_SWORD:
 					e.setCancelled(true);
-					p.sendMessage(String.format("%sYou have chosen %sZeus%s!", ChatColor.AQUA, ChatColor.RED, ChatColor.AQUA));
+					p.sendMessage(String.format("%sYou have chosen %sZeus%s!", ChatColor.RED, ChatColor.GOLD, ChatColor.RED));
+					puser.addGroup(ZeusRankName);
+					p.closeInventory();
+				case TRIDENT:
+					e.setCancelled(true);
+					p.sendMessage(String.format("%sYou have chosen %Poseidon%s!", ChatColor.RED, ChatColor.AQUA, ChatColor.RED));
+					puser.addGroup(PoseidonRankName);
+					p.closeInventory();
+					break;
+				case GOLDEN_SHOVEL:
+					e.setCancelled(true);
+					p.sendMessage(String.format("%sYou have chosen %Hades%s!", ChatColor.RED, ChatColor.DARK_RED, ChatColor.RED));
+					puser.addGroup(HadesRankName);
 					p.closeInventory();
 					break;
 				default:
@@ -1416,10 +1245,23 @@ public class Main extends JavaPlugin implements Listener{
 				return;
 			} else if(ChatColor.stripColor(e.getInventory().getName()).equalsIgnoreCase("Roman")) {
 				switch(e.getCurrentItem().getType()){
-				case BLAZE_ROD:
+				case GOLDEN_SWORD:
 					e.setCancelled(true);
 					p.sendMessage(String.format("%sYou have chosen %sJupiter%s!", ChatColor.AQUA, ChatColor.RED, ChatColor.AQUA));
+					puser.addGroup(JupiterRankName);
 					p.closeInventory();					
+					break;
+				case TRIDENT:
+					e.setCancelled(true);
+					p.sendMessage(String.format("%sYou have chosen %Neptune%s!", ChatColor.RED, ChatColor.AQUA, ChatColor.RED));
+					puser.addGroup(NeptuneRankName);
+					p.closeInventory();
+					break;
+				case GOLDEN_SHOVEL:
+					e.setCancelled(true);
+					p.sendMessage(String.format("%sYou have chosen %Pluto%s!", ChatColor.RED, ChatColor.DARK_RED, ChatColor.RED));
+					puser.addGroup(PlutoRankName);
+					p.closeInventory();
 					break;
 				default:
 					e.setCancelled(true);
