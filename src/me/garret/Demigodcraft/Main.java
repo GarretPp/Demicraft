@@ -26,7 +26,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -115,6 +114,7 @@ public class Main extends JavaPlugin implements Listener{
 			ItemStack spatha = new ItemStack(Material.GOLDEN_SWORD); {
 				ItemMeta meta2 = spatha.getItemMeta();
 				meta2.addEnchant(Enchantment.DAMAGE_ALL, 3, false);
+				meta2.setUnbreakable(true);
 				meta2.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
 				spatha.setItemMeta(meta2);
 			}
@@ -126,8 +126,10 @@ public class Main extends JavaPlugin implements Listener{
 			Bukkit.addRecipe(srecipe);
 			
 			//weapon of hades
-			ItemStack fork = new ItemStack(Material.DIAMOND_SHOVEL, 1); {
+			ItemStack fork = new ItemStack(Material.DIAMOND_SWORD, 1); {
 				ItemMeta meta3 = fork.getItemMeta();
+				meta3.addEnchant(Enchantment.DAMAGE_ALL, 2, false);
+				meta3.addEnchant(Enchantment.FIRE_ASPECT, 1, false);
 				meta3.setDisplayName(ChatColor.RED + "Pitchfork");
 				fork.setItemMeta(meta3);
 			}
@@ -143,6 +145,7 @@ public class Main extends JavaPlugin implements Listener{
 				sunb.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 4);
 				ItemMeta meta4 = sunb.getItemMeta();
 				meta4.addEnchant(Enchantment.ARROW_DAMAGE, 4, false);
+				meta4.addEnchant(Enchantment.ARROW_FIRE, 1, false);
 				meta4.setDisplayName(ChatColor.GOLD + "Sun Bow");
 				sunb.setItemMeta(meta4);
 			} 
@@ -159,6 +162,7 @@ public class Main extends JavaPlugin implements Listener{
 				moonb.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 4);
 				ItemMeta meta5 = moonb.getItemMeta();
 				meta5.addEnchant(Enchantment.ARROW_DAMAGE, 4, false);
+				meta5.addEnchant(Enchantment.ARROW_KNOCKBACK, 1, false);
 				meta5.setDisplayName(ChatColor.BLUE + "Moon Bow");
 				moonb.setItemMeta(meta5);
 			}
@@ -920,12 +924,14 @@ public class Main extends JavaPlugin implements Listener{
 		ItemStack zeusc = new ItemStack(Material.GOLDEN_SWORD, 1);
 		zeusc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 3);
 		ItemMeta meta = zeusc.getItemMeta();
+		meta.setUnbreakable(true);
 		meta.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.GREEN + " Charged");
 		zeusc.setItemMeta(meta);
 
 		ItemStack zeusuc = new ItemStack(Material.GOLDEN_SWORD, 1);
 		zeusuc.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 3);
 		ItemMeta meta1 = zeusuc.getItemMeta();
+		meta1.setUnbreakable(true);
 		meta1.setDisplayName(ChatColor.GOLD + "Spatha " + ChatColor.GRAY + "-" + ChatColor.RED + " Uncharged");
 		zeusuc.setItemMeta(meta1);
 
@@ -1255,14 +1261,6 @@ public class Main extends JavaPlugin implements Listener{
 			return;
 		}
 
-	}
-
-
-
-	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent e) {
-		Player p = (Player) e.getEntity();
-		e.setDeathMessage(ChatColor.GOLD + "Player " + ChatColor.GOLD + p.getDisplayName() + ChatColor.GOLD + " was killed by " + ChatColor.GOLD + p.getKiller().getDisplayName() + ChatColor.GOLD + " using " + ChatColor.GOLD + p.getKiller().getInventory().getItemInMainHand().getType().toString().toLowerCase() + ChatColor.GOLD + "!");
 	}
     
 	public void noPermission(Player player){
